@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  email String @unique
+  createdAt DateTime @default(now())
+
+  boulders Boulder[]
+  @@map("users")
+}
+
+model Boulder{
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  difficulty Difficulty
+  latitude Float
+  longitude Float
+  createdAt DateTime @default(now())
+
+  userId Int?
+  user User?  @relation(fields: [userId], references: [id])
+
+  photos Photo[]
+  @@map("boulders")
+}
+
+model Photo {
+  id         Int      @id @default(autoincrement())
+  url        String
+  uploadedAt DateTime @default(now())
+
+  boulderId  Int
+  boulder    Boulder  @relation(fields: [boulderId], references: [id])
+  @@map("photos")
+}
+
+enum Difficulty {
+  facile
+  medio
+  difficile
+}
