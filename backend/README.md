@@ -31,6 +31,10 @@
 $ npm install
 ```
 
+## Run nestJS with the db
+
+npm run "dev:start"
+
 ## Compile and run the project
 
 ```bash
