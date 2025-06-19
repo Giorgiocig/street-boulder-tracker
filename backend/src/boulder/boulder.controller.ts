@@ -1,7 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { BoulderService } from './boulder.service';
 import { BoulderDto } from './dto';
-import { IBoulder } from 'src/utilities/interfaces';
 
 @Controller('boulders')
 export class BoulderController {
