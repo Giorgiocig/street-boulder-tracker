@@ -5,23 +5,28 @@ import { ConfigService } from '@nestjs/config';
 import { createBaseDto } from './fixture';
 
 describe('BoulderService', () => {
+  // Variables to keep trace of instances of BoulderService and PrismaService. they will be initialized in beforeEach
   let service: BoulderService;
   let prisma: PrismaService;
 
+  // Mock of PrismaService --> mock object simulating Prisma. Only boulder.create is simulated with jest.fn()
   const mockPrismaService = {
     boulder: {
       create: jest.fn(),
     },
   };
 
+  // Mock of ConfigService --> to avoid to load configfile
   const mockConfigService = {
-    get: jest.fn().mockReturnValue('some-value'),
+    get: jest.fn(),
   };
 
+  // Silent console.error
   beforeAll(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {}); // silenzia console.error
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
+  // Create a nestJs module to provide real BoulderService (to test) and mocked PrismaModule & ConfiService
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -36,11 +41,12 @@ describe('BoulderService', () => {
         },
       ],
     }).compile();
-  
+
     service = module.get<BoulderService>(BoulderService);
     prisma = module.get<PrismaService>(PrismaService);
   });
 
+  // Clear and clean all mock between each test
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -54,7 +60,6 @@ describe('BoulderService', () => {
   });
 
   describe('insertBoulder', () => {
-
     it('should call prisma.boulder.create with correct data', async () => {
       const baseDtoNoUser = createBaseDto();
       mockPrismaService.boulder.create.mockResolvedValue(baseDtoNoUser);
