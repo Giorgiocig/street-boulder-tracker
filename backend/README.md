@@ -31,7 +31,6 @@
 $ npm install
 ```
 
-
 ## Compile and run the project
 
 ```bash
@@ -57,6 +56,10 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## e2e Test
+
+a separate environment for test is set up. with a test db and scripts. A hook in package.json pretest is included to restart a new fresh db at each test session.
 
 ## Deployment
 
