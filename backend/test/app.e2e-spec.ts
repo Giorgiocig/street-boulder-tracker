@@ -19,7 +19,7 @@ describe('App e2e', () => {
   });
   afterAll(() => app.close());
   describe('Boulders', () => {
-    describe('insertBoulder', () => {
+    describe('addBoulder', () => {
       it('should insert a boulder', () => {
         return pactum
           .spec()
@@ -39,6 +39,14 @@ describe('App e2e', () => {
             createdAt: '2025-06-18T14:30:00.000Z',
           })
           .expectStatus(400);
+      });
+    });
+    describe('getBoulders', () => {
+      it('should return all bouders', () => {
+        return pactum
+          .spec()
+          .get('http://localhost:3000/v1/boulders/get')
+          .expectStatus(200);
       });
     });
   });
