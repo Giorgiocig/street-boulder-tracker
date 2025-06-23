@@ -33,7 +33,7 @@ model Boulder{
   createdAt DateTime @default(now())
 
   userId Int?
-  user User?  @relation(fields: [userId], references: [id])
+  user User?  @relation(fields: [userId], references: [id], onDelete:Cascade)
 
   photos Photo[]
   @@map("boulders")
@@ -45,7 +45,7 @@ model Photo {
   uploadedAt DateTime @default(now())
 
   boulderId  Int
-  boulder    Boulder  @relation(fields: [boulderId], references: [id])
+  boulder    Boulder  @relation(fields: [boulderId], references: [id], onDelete:Cascade)
   @@map("photos")
 }
 
