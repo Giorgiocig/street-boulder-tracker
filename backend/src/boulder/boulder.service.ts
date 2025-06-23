@@ -22,4 +22,12 @@ export class BoulderService {
       throw new Error('Failed to create boulder');
     }
   }
+  async getBoulders() {
+    try {
+      return await this.prisma.boulder.findMany();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to fetch and get boulders');
+    }
+  }
 }
