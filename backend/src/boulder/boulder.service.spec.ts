@@ -3,6 +3,7 @@ import { BoulderService } from './boulder.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { createBaseDto } from './fixture';
+import { describe } from 'node:test';
 
 describe('BoulderService', () => {
   // Variables to keep trace of instances of BoulderService and PrismaService. they will be initialized in beforeEach
@@ -13,6 +14,17 @@ describe('BoulderService', () => {
   const mockPrismaService = {
     boulder: {
       create: jest.fn(),
+      findMany: jest.fn().mockResolvedValue([
+        {
+          id: 1,
+          name: 'Test Boulder',
+          description: 'Sample',
+          difficulty: 'medio',
+          latitude: 45.0,
+          longitude: 9.0,
+          createdAt: new Date(),
+        },
+      ]),
     },
   };
 
@@ -120,6 +132,13 @@ describe('BoulderService', () => {
         },
       });
       expect(result).toEqual(baseDtoNoUser);
+    });
+  });
+  describe('getBoulders', () => {
+    it('should return list of boulders', async () => {
+      const boulders = await service.getBoulders();
+      expect(boulders).toHaveLength(1);
+      expect(boulders[0].name).toBe('Test Boulder');
     });
   });
 });
