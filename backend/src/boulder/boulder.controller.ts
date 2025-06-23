@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { BoulderService } from './boulder.service';
 import { BoulderDto } from './dto';
 
@@ -9,5 +9,10 @@ export class BoulderController {
   @Post('/add')
   async addBoulder(@Body() dto: BoulderDto): Promise<any> {
     return await this.boulderService.addBoulder(dto);
+  }
+
+  @Get('/get')
+  async getBoulders() {
+    return await this.boulderService.getBoulders();
   }
 }
