@@ -59,11 +59,11 @@ describe('BoulderService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('insertBoulder', () => {
+  describe('addBoulder', () => {
     it('should call prisma.boulder.create with correct data', async () => {
       const baseDtoNoUser = createBaseDto();
       mockPrismaService.boulder.create.mockResolvedValue(baseDtoNoUser);
-      const result = await service.insertBoulder(baseDtoNoUser);
+      const result = await service.addBoulder(baseDtoNoUser);
       expect(prisma.boulder.create).toHaveBeenCalledWith({
         data: {
           name: baseDtoNoUser.name,
@@ -82,7 +82,7 @@ describe('BoulderService', () => {
     it('should throw an error if prisma does it', async () => {
       const baseDtoNoUser = createBaseDto();
       mockPrismaService.boulder.create.mockRejectedValue(new Error('DB error'));
-      await expect(service.insertBoulder(baseDtoNoUser)).rejects.toThrow(
+      await expect(service.addBoulder(baseDtoNoUser)).rejects.toThrow(
         'Failed to create boulder',
       );
     });
@@ -90,7 +90,7 @@ describe('BoulderService', () => {
     it('should pass userId if provided', async () => {
       const baseDtoWithUser = createBaseDto(42);
       mockPrismaService.boulder.create.mockResolvedValue(baseDtoWithUser);
-      const result = await service.insertBoulder(baseDtoWithUser);
+      const result = await service.addBoulder(baseDtoWithUser);
       expect(prisma.boulder.create).toHaveBeenCalledWith({
         data: {
           name: baseDtoWithUser.name,
@@ -108,7 +108,7 @@ describe('BoulderService', () => {
     it('should omit userId if not provided', async () => {
       const baseDtoNoUser = createBaseDto();
       mockPrismaService.boulder.create.mockResolvedValue(baseDtoNoUser);
-      const result = await service.insertBoulder(baseDtoNoUser);
+      const result = await service.addBoulder(baseDtoNoUser);
       expect(prisma.boulder.create).toHaveBeenCalledWith({
         data: {
           name: baseDtoNoUser.name,

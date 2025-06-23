@@ -23,14 +23,14 @@ describe('App e2e', () => {
       it('should insert a boulder', () => {
         return pactum
           .spec()
-          .post('http://localhost:3000/v1/boulders/insert')
+          .post('http://localhost:3000/v1/boulders/add')
           .withBody(boulderDtoFixture)
           .expectStatus(201);
       });
       it('should throw an error without name', () => {
         return pactum
           .spec()
-          .post('http://localhost:3000/v1/boulders/insert')
+          .post('http://localhost:3000/v1/boulders/add')
           .withBody({
             description: 'Nice boulder',
             difficulty: Difficulty.facile,

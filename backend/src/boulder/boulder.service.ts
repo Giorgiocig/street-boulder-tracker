@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class BoulderService {
   constructor(private prisma: PrismaService) {}
-  async insertBoulder(dto: BoulderDto) {
+  async addBoulder(dto: BoulderDto) {
     try {
       const boulder = {
         name: dto.name,

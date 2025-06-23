@@ -6,8 +6,8 @@ import { BoulderDto } from './dto';
 export class BoulderController {
   constructor(private readonly boulderService: BoulderService) {}
 
-  @Post('/insert')
-  async insertBoulder(@Body() dto: BoulderDto): Promise<any> {
-    return await this.boulderService.insertBoulder(dto);
+  @Post('/add')
+  async addBoulder(@Body() dto: BoulderDto): Promise<any> {
+    return await this.boulderService.addBoulder(dto);
   }
 }
