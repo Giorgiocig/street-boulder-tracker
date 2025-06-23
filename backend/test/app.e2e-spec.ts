@@ -1,25 +1,45 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { AppModule } from 'src/app.module';
+import * as pactum from 'pactum';
+import { Difficulty } from 'src/utilities/enums/enums';
+import { boulderDtoFixture } from './fixture';
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication<App>;
-
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+describe('App e2e', () => {
+  let app: INestApplication;
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-
-    app = moduleFixture.createNestApplication();
+    app = moduleRef.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     await app.init();
+    // pactum needs a server to make request
+    await app.listen(3000);
   });
-
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  afterAll(() => app.close());
+  describe('Boulders', () => {
+    describe('insertBoulder', () => {
+      it('should insert a boulder', () => {
+        return pactum
+          .spec()
+          .post('http://localhost:3000/v1/boulders/insert')
+          .withBody(boulderDtoFixture)
+          .expectStatus(201);
+      });
+      it('should throw an error without name', () => {
+        return pactum
+          .spec()
+          .post('http://localhost:3000/v1/boulders/insert')
+          .withBody({
+            description: 'Nice boulder',
+            difficulty: Difficulty.facile,
+            latitude: 45.123,
+            longitude: 7.123,
+            createdAt: '2025-06-18T14:30:00.000Z',
+          })
+          .expectStatus(400);
+      });
+    });
   });
 });
