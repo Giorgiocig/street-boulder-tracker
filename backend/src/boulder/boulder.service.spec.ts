@@ -86,7 +86,6 @@ describe('BoulderService', () => {
 
       expect(result).toEqual(baseDtoNoUser);
     });
-
     it('should throw an error if prisma does it', async () => {
       const baseDtoNoUser = createBaseDto();
       mockPrismaService.boulder.create.mockRejectedValue(new Error('DB error'));
@@ -94,7 +93,6 @@ describe('BoulderService', () => {
         'Failed to create boulder',
       );
     });
-
     it('should pass userId if provided', async () => {
       const baseDtoWithUser = createBaseDto(42);
       mockPrismaService.boulder.create.mockResolvedValue(baseDtoWithUser);
@@ -112,7 +110,6 @@ describe('BoulderService', () => {
       });
       expect(result).toEqual(baseDtoWithUser);
     });
-
     it('should omit userId if not provided', async () => {
       const baseDtoNoUser = createBaseDto();
       mockPrismaService.boulder.create.mockResolvedValue(baseDtoNoUser);
