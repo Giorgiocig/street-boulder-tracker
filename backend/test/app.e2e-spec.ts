@@ -49,5 +49,25 @@ describe('App e2e', () => {
           .expectStatus(200);
       });
     });
+    describe('getBoulder', () => {
+      it('should return one boulder', () => {
+        return pactum
+          .spec()
+          .get('http://localhost:3000/v1/boulders/1')
+          .expectStatus(200);
+      });
+    });
+    it('should return 404 if boulder doesn t exist', () => {
+      return pactum
+        .spec()
+        .get('http://localhost:3000/v1/boulders/999')
+        .expectStatus(404);
+    });
+    it('should return 400 if id is invalid', () => {
+      return pactum
+        .spec()
+        .get('http://localhost:3000/v1/boulders/invalidId')
+        .expectStatus(400);
+    });
   });
 });
