@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BoulderDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -27,6 +27,21 @@ export class BoulderService {
       return await this.prisma.boulder.findMany();
     } catch (error) {
       console.error(error);
+      throw new Error('Failed to fetch and get boulders');
+    }
+  }
+  async getBoulder(id: number) {
+    try {
+      const boulder = await this.prisma.boulder.findUnique({
+        where: { id },
+      });
+      if (!boulder)
+        throw new NotFoundException(`Boulder with ID ${id} not found`);
+      return boulder;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new Error('Failed to fetch and get boulders');
     }
   }

@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { BoulderService } from './boulder.service';
 import { BoulderDto } from './dto';
 
@@ -14,5 +21,10 @@ export class BoulderController {
   @Get('/get')
   async getBoulders() {
     return await this.boulderService.getBoulders();
+  }
+
+  @Get(':id')
+  async getBoulder(@Param('id', ParseIntPipe) id: number) {
+    return await this.boulderService.getBoulder(id);
   }
 }
