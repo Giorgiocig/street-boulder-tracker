@@ -4,10 +4,12 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { BoulderService } from './boulder.service';
 import { BoulderDto } from './dto';
+import { UpdateBoulderDto } from './dto/update-boulder.dto';
 
 @Controller('v1/boulders')
 export class BoulderController {
@@ -19,12 +21,20 @@ export class BoulderController {
   }
 
   @Get('/get')
-  async getBoulders() {
+  async getBoulders(): Promise<any> {
     return await this.boulderService.getBoulders();
   }
 
   @Get(':id')
-  async getBoulder(@Param('id', ParseIntPipe) id: number) {
+  async getBoulder(@Param('id', ParseIntPipe) id: number): Promise<any> {
     return await this.boulderService.getBoulder(id);
+  }
+
+  @Patch(':id')
+  async updateBoulder(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateBoulderDto,
+  ): Promise<any> {
+    return await this.boulderService.updateBoulder(id, dto);
   }
 }
