@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { BoulderDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdateBoulderDto } from './dto/update-boulder.dto';
 
 @Injectable()
 export class BoulderService {
@@ -42,7 +47,31 @@ export class BoulderService {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new Error('Failed to fetch and get boulders');
+      throw new InternalServerErrorException('Failed to update boulder');
+    }
+  }
+  async updateBoulder(id: number, dto: UpdateBoulderDto) {
+    try {
+      const existingBoulder = await this.prisma.boulder.findUnique({
+        where: { id },
+      });
+      if (!existingBoulder)
+        throw new NotFoundException(`Boulder with ID ${id} not found`);
+      const updatedBoulder: UpdateBoulderDto = {};
+      for (const [key, value] of Object.entries(dto)) {
+        if (value !== undefined) updatedBoulder[key] = value;
+      }
+      return await this.prisma.boulder.update({
+        where: {
+          id: id,
+        },
+        data: updatedBoulder,
+      });
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to update boulder');
     }
   }
 }
