@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { createBaseDto } from './fixture';
 import { describe } from 'node:test';
+import { NotFoundException } from '@nestjs/common';
 
 describe('BoulderService', () => {
   // Variables to keep trace of instances of BoulderService and PrismaService. they will be initialized in beforeEach
@@ -14,17 +15,8 @@ describe('BoulderService', () => {
   const mockPrismaService = {
     boulder: {
       create: jest.fn(),
-      findMany: jest.fn().mockResolvedValue([
-        {
-          id: 1,
-          name: 'Test Boulder',
-          description: 'Sample',
-          difficulty: 'medio',
-          latitude: 45.0,
-          longitude: 9.0,
-          createdAt: new Date(),
-        },
-      ]),
+      findMany: jest.fn().mockResolvedValue([createBaseDto()]),
+      findUnique: jest.fn().mockResolvedValue(createBaseDto()),
     },
   };
 
@@ -139,6 +131,16 @@ describe('BoulderService', () => {
       const boulders = await service.getBoulders();
       expect(boulders).toHaveLength(1);
       expect(boulders[0].name).toBe('Test Boulder');
+    });
+  });
+  describe('getBoulders', () => {
+    it('should return one boulder', async () => {
+      const boulder = await service.getBoulder(1);
+      expect(boulder.name).toBe('Test Boulder');
+    });
+    it('should fail if boulder doesn’t exist', async () => {
+      mockPrismaService.boulder.findUnique.mockResolvedValue(null);
+      await expect(service.getBoulder(999)).rejects.toThrow(NotFoundException);
     });
   });
 });
