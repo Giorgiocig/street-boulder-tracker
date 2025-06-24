@@ -25,7 +25,8 @@ describe('App e2e', () => {
           .spec()
           .post('http://localhost:3000/v1/boulders/add')
           .withBody(boulderDtoFixture)
-          .expectStatus(201);
+          .expectStatus(201)
+          .stores('boulderId', 'id');
       });
       it('should throw an error without name', () => {
         return pactum
@@ -46,14 +47,21 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .get('http://localhost:3000/v1/boulders/get')
-          .expectStatus(200);
+          .expectStatus(200)
+          .expectJsonLike([
+            {
+              id: '$S{boulderId}',
+              name: boulderDtoFixture.name,
+            },
+          ]);
       });
     });
     describe('getBoulder', () => {
       it('should return one boulder', () => {
         return pactum
           .spec()
-          .get('http://localhost:3000/v1/boulders/1')
+          .get('http://localhost:3000/v1/boulders/{id}')
+          .withPathParams('id', '$S{boulderId}')
           .expectStatus(200);
       });
     });
@@ -68,6 +76,29 @@ describe('App e2e', () => {
         .spec()
         .get('http://localhost:3000/v1/boulders/invalidId')
         .expectStatus(400);
+    });
+  });
+  describe('updateBoulder', () => {
+    it('should update a boulder', () => {
+      return pactum
+        .spec()
+        .patch('http://localhost:3000/v1/boulders/{id}')
+        .withPathParams('id', '$S{boulderId}')
+        .withBody({ name: 'Updated Boulder' })
+        .expectStatus(200)
+        .expectBodyContains('Updated Boulder');
+    });
+    it('should return 400 if id is invalid', () => {
+      return pactum
+        .spec()
+        .patch('http://localhost:3000/v1/boulders/invalidId')
+        .expectStatus(400);
+    });
+    it('should return 404 if boulder doesn t exist', () => {
+      return pactum
+        .spec()
+        .patch('http://localhost:3000/v1/boulders/999')
+        .expectStatus(404);
     });
   });
 });
