@@ -4,7 +4,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { createBaseDto } from './fixture';
 import { describe } from 'node:test';
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
 describe('BoulderService', () => {
   // Variables to keep trace of instances of BoulderService and PrismaService. they will be initialized in beforeEach
@@ -17,6 +20,7 @@ describe('BoulderService', () => {
       create: jest.fn(),
       findMany: jest.fn().mockResolvedValue([createBaseDto()]),
       findUnique: jest.fn().mockResolvedValue(createBaseDto()),
+      update: jest.fn().mockResolvedValue(createBaseDto()),
     },
   };
 
@@ -141,6 +145,40 @@ describe('BoulderService', () => {
     it('should fail if boulder doesn’t exist', async () => {
       mockPrismaService.boulder.findUnique.mockResolvedValue(null);
       await expect(service.getBoulder(999)).rejects.toThrow(NotFoundException);
+    });
+    it('should throw InternalServerErrorException on get failure', async () => {
+      mockPrismaService.boulder.findUnique.mockRejectedValue(
+        new Error('DB failure'),
+      );
+      await expect(service.getBoulder(1)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+    });
+  });
+  describe('updateBoulders', () => {
+    it('should update', async () => {
+      mockPrismaService.boulder.findUnique.mockResolvedValue(createBaseDto());
+      mockPrismaService.boulder.update.mockImplementation(({ data }) => ({
+        ...createBaseDto(),
+        ...data,
+      }));
+      const boulder = await service.updateBoulder(1, { name: 'new' });
+      expect(boulder.name).toBe('new');
+    });
+    it('should fail if boulder doesn’t exist', async () => {
+      mockPrismaService.boulder.findUnique.mockResolvedValue(null);
+      await expect(service.updateBoulder(999, { name: 'new' })).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+    it('should throw InternalServerErrorException on update failure', async () => {
+      mockPrismaService.boulder.findUnique.mockResolvedValue(createBaseDto());
+      mockPrismaService.boulder.update.mockRejectedValue(
+        new Error('DB failure'),
+      );
+      await expect(service.updateBoulder(1, { name: 'new' })).rejects.toThrow(
+        InternalServerErrorException,
+      );
     });
   });
 });
