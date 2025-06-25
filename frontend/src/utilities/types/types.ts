@@ -3,7 +3,7 @@ import type { BoulderFormData } from "../interfaces";
 type TextFieldType = {
   id: string;
   label: string;
-  name: keyof BoulderFormData;
+  name: string;
   variant: "outlined" | "standard" | "filled";
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
