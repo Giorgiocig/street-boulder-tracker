@@ -101,4 +101,26 @@ describe('App e2e', () => {
         .expectStatus(404);
     });
   });
+  describe('deleteBoulder', () => {
+    it('should delete a boulder', () => {
+      return pactum
+        .spec()
+        .delete('http://localhost:3000/v1/boulders/{id}')
+        .withPathParams('id', '$S{boulderId}')
+        .expectStatus(200)
+        .expectJsonLike({ id: '$S{boulderId}', name: 'Updated Boulder' });
+    });
+    it('should return 400 if id is invalid', () => {
+      return pactum
+        .spec()
+        .delete('http://localhost:3000/v1/boulders/invalidId')
+        .expectStatus(400);
+    });
+    it('should return 404 if boulder doesn t exist', () => {
+      return pactum
+        .spec()
+        .patch('http://localhost:3000/v1/boulders/999')
+        .expectStatus(404);
+    });
+  });
 });
