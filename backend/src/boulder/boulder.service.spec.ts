@@ -21,6 +21,7 @@ describe('BoulderService', () => {
       findMany: jest.fn().mockResolvedValue([createBaseDto()]),
       findUnique: jest.fn().mockResolvedValue(createBaseDto()),
       update: jest.fn().mockResolvedValue(createBaseDto()),
+      delete: jest.fn(),
     },
   };
 
@@ -174,6 +175,33 @@ describe('BoulderService', () => {
         new Error('DB failure'),
       );
       await expect(service.updateBoulder(1, { name: 'new' })).rejects.toThrow(
+        InternalServerErrorException,
+      );
+    });
+  });
+  describe('updateBoulders', () => {
+    it('should delete boulder successfully', async () => {
+      const mockBoulder = { ...createBaseDto(), id: 1 };
+      mockPrismaService.boulder.findUnique.mockResolvedValue(mockBoulder);
+      mockPrismaService.boulder.delete.mockResolvedValue(mockBoulder);
+      const result = await service.deleteBoulder(mockBoulder.id);
+      expect(prisma.boulder.delete).toHaveBeenCalledWith({
+        where: { id: mockBoulder.id },
+      });
+      expect(result).toEqual(mockBoulder);
+    });
+    it('should fail if boulder doesn’t exist', async () => {
+      mockPrismaService.boulder.findUnique.mockResolvedValue(null);
+      await expect(service.deleteBoulder(999)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+    it('should throw InternalServerErrorException on delete failure', async () => {
+      mockPrismaService.boulder.findUnique.mockResolvedValue(createBaseDto());
+      mockPrismaService.boulder.delete.mockRejectedValue(
+        new Error('DB failure'),
+      );
+      await expect(service.deleteBoulder(1)).rejects.toThrow(
         InternalServerErrorException,
       );
     });
