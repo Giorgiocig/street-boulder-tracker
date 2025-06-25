@@ -1,3 +1,5 @@
+import type { FieldType } from "../types";
+
 export interface ISelectForm {
   menuItems: string[];
   setFormData: React.Dispatch<React.SetStateAction<BoulderFormData>>;
@@ -9,4 +11,8 @@ export interface BoulderFormData {
   difficulty: string;
   lat: string;
   long: string;
+}
+
+export interface IFormFieldsContainerProps {
+  fields: FieldType[];
 }
