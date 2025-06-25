@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -36,5 +37,10 @@ export class BoulderController {
     @Body() dto: UpdateBoulderDto,
   ): Promise<any> {
     return await this.boulderService.updateBoulder(id, dto);
+  }
+
+  @Delete(':id')
+  async deleteBoulder(@Param('id', ParseIntPipe) id: number): Promise<any> {
+    return await this.boulderService.deleteBoulder(id);
   }
 }
