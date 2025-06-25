@@ -1,35 +1,19 @@
 import React from "react";
-import {
-  Button,
-  FormControl,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-  type SelectChangeEvent,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+import { Button, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import PublishIcon from "@mui/icons-material/Publish";
+import SelectForm from "../form/SelectForm";
+import { DIFFICULTY_SELECT_FIELD } from "../../utilities/constants";
+import type { BoulderFormData } from "../../utilities/interfaces";
 
-type Props = {};
-
-export default function BoulderForm({}: Props) {
-  const [difficulty, setDifficulty] = useState("facile");
-  const [formData, setFormData] = useState({
+export default function BoulderForm() {
+  const [formData, setFormData] = useState<BoulderFormData>({
     name: "",
     description: "",
     difficulty: "facile",
     lat: "",
     long: "",
   });
-
-  useEffect(() => {
-    setFormData((prev) => ({ ...prev, difficulty }));
-  }, [difficulty]);
-
-  const handleChangeSelect = (event: SelectChangeEvent) => {
-    setDifficulty(event.target.value as string);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,7 +24,7 @@ export default function BoulderForm({}: Props) {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log("dlfsjl");
+    console.log(formData);
   };
 
   return (
@@ -48,7 +32,7 @@ export default function BoulderForm({}: Props) {
       <Typography>helllo</Typography>
       <TextField
         id="textfield-name"
-        label="name"
+        label="nome"
         name="name"
         variant="outlined"
         onChange={handleChange}
@@ -56,25 +40,16 @@ export default function BoulderForm({}: Props) {
       />
       <TextField
         id="textfield-description"
-        label="description"
+        label="descrizione"
         variant="outlined"
         name="description"
         value={formData.description}
         onChange={handleChange}
       />
-      <FormControl>
-        <Select
-          labelId="select-difficulty"
-          id="select-difficulty"
-          value={difficulty}
-          label="difficulty"
-          onChange={handleChangeSelect}
-        >
-          <MenuItem value={"facile"}>Facile</MenuItem>
-          <MenuItem value={"medio"}>Medio</MenuItem>
-          <MenuItem value={"difficile"}>Difficile</MenuItem>
-        </Select>
-      </FormControl>
+      <SelectForm
+        setFormData={setFormData}
+        menuItems={DIFFICULTY_SELECT_FIELD}
+      />
       <TextField
         id="textfield-lat"
         label="lat"
@@ -83,7 +58,6 @@ export default function BoulderForm({}: Props) {
         value={formData.lat}
         onChange={handleChange}
       />
-
       <TextField
         id="textfield-long"
         label="long"
@@ -93,7 +67,7 @@ export default function BoulderForm({}: Props) {
         onChange={handleChange}
       />
       <Button variant="contained" endIcon={<PublishIcon />} type="submit">
-        Send
+        Salva Boulder
       </Button>
     </form>
   );
