@@ -24,7 +24,7 @@ export class BoulderService {
       return await this.prisma.boulder.create({ data: boulder });
     } catch (error) {
       console.error(error);
-      throw new Error('Failed to create boulder');
+      throw new Error('Failed to create boulder', error);
     }
   }
   async getBoulders() {
@@ -32,7 +32,7 @@ export class BoulderService {
       return await this.prisma.boulder.findMany();
     } catch (error) {
       console.error(error);
-      throw new Error('Failed to fetch and get boulders');
+      throw new Error('Failed to fetch and get boulders', error);
     }
   }
   async getBoulder(id: number) {
@@ -44,10 +44,11 @@ export class BoulderService {
         throw new NotFoundException(`Boulder with ID ${id} not found`);
       return boulder;
     } catch (error) {
+      console.error(error);
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new InternalServerErrorException('Failed to update boulder');
+      throw new InternalServerErrorException('Failed to update boulder', error);
     }
   }
   async updateBoulder(id: number, dto: UpdateBoulderDto) {
@@ -68,10 +69,27 @@ export class BoulderService {
         data: updatedBoulder,
       });
     } catch (error) {
+      console.error(error);
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new InternalServerErrorException('Failed to update boulder');
+      throw new InternalServerErrorException('Failed to update boulder', error);
+    }
+  }
+  async deleteBoulder(id: number) {
+    try {
+      const existingBoulder = await this.prisma.boulder.findUnique({
+        where: { id },
+      });
+      if (!existingBoulder)
+        throw new NotFoundException(`Boulder with ID ${id} not found`);
+      return await this.prisma.boulder.delete({ where: { id } });
+    } catch (error) {
+      console.error(error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to update boulder', error);
     }
   }
 }
