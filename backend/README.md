@@ -44,6 +44,16 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## RUN PROJECT VIA DOCKER
+
+root folder
+docker compose up -d
+
+cd ../backend
+npm run db:dev:restart --> to apply migrations to db
+
+npm run start
+
 ## Run tests
 
 ```bash
