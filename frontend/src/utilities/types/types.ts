@@ -1,11 +1,11 @@
-import type { BoulderFormData } from "../interfaces";
+import type { IBoulder } from "../interfaces";
 
 type TextFieldType = {
   id: string;
   label: string;
   name: string;
   variant: "outlined" | "standard" | "filled";
-  value: string;
+  value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   select?: false;
 };
@@ -13,7 +13,7 @@ type TextFieldType = {
 type SelectFieldType = {
   select: true;
   menuItems: string[];
-  setFormData: React.Dispatch<React.SetStateAction<BoulderFormData>>;
+  setFormData: React.Dispatch<React.SetStateAction<IBoulder>>;
   value: string;
 };
 
