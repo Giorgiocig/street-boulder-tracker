@@ -52,6 +52,7 @@ export default function BoulderForm() {
             select: true,
             setFormData: setFormData,
             menuItems: DIFFICULTY_SELECT_MENU_ITEMS,
+            value: formData.difficulty,
           },
           {
             id: "textfield-lat",

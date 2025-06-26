@@ -10,8 +10,9 @@ import type { ISelectForm } from "../../utilities/interfaces";
 export default function SelectForm({
   menuItems = [],
   setFormData,
+  value,
 }: ISelectForm) {
-  const [difficulty, setDifficulty] = useState("facile");
+  const [difficulty, setDifficulty] = useState(value || "facile");
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, difficulty }));
@@ -26,7 +27,7 @@ export default function SelectForm({
         labelId="select-difficulty"
         id="select-difficulty"
         value={difficulty}
-        label="difficulty"
+        label="Difficulty"
         onChange={handleChangeSelect}
       >
         {menuItems.map((menuItem) => (

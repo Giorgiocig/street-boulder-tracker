@@ -7,14 +7,17 @@ export default function FormFieldsContainer({
 }: IFormFieldsContainerProps) {
   return (
     <>
-      {fields.map((field) =>
+      {fields.map((field, idx) =>
         field.select ? (
           <SelectForm
+            key={idx}
             setFormData={field.setFormData}
             menuItems={field.menuItems}
+            value={field.value}
           />
         ) : (
           <TextField
+            key={idx}
             id={field.id}
             label={field.label}
             name={field.name}
