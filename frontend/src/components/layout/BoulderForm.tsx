@@ -3,29 +3,39 @@ import { Button, Typography } from "@mui/material";
 import { useState } from "react";
 import PublishIcon from "@mui/icons-material/Publish";
 import { DIFFICULTY_SELECT_MENU_ITEMS } from "../../utilities/constants";
-import type { BoulderFormData } from "../../utilities/interfaces";
+import type { IBoulder } from "../../utilities/interfaces";
 import FormFieldsContainer from "./FormFieldsContainer";
+import { useAddBoulder } from "../../hooks/useAddBoulders";
 
 export default function BoulderForm() {
-  const [formData, setFormData] = useState<BoulderFormData>({
+  const { mutate, isError, error } = useAddBoulder();
+  const [formData, setFormData] = useState<IBoulder>({
     name: "",
     description: "",
     difficulty: "facile",
-    lat: "",
-    long: "",
+    latitude: 0,
+    longitude: 0,
+    createdAt: new Date().toISOString(),
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => {
-      return { ...prevFormData, [name]: value };
+      return {
+        ...prevFormData,
+        [name]:
+          name === "lat" || name === "long" ? parseFloat(value) || 0 : value,
+      };
     });
   };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log(formData);
+    mutate(formData);
   };
+
+  console.log(isError && error);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -59,7 +69,7 @@ export default function BoulderForm() {
             label: "lat",
             variant: "outlined",
             name: "lat",
-            value: formData.lat,
+            value: formData.latitude,
             onChange: handleChange,
           },
           {
@@ -67,7 +77,7 @@ export default function BoulderForm() {
             label: "long",
             variant: "outlined",
             name: "long",
-            value: formData.long,
+            value: formData.longitude,
             onChange: handleChange,
           },
         ]}
