@@ -14,6 +14,7 @@ type SelectFieldType = {
   select: true;
   menuItems: string[];
   setFormData: React.Dispatch<React.SetStateAction<BoulderFormData>>;
+  value: string;
 };
 
 export type FieldType = TextFieldType | SelectFieldType;
