@@ -1,14 +1,16 @@
-import React from "react";
-import { Button, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useState } from "react";
 import PublishIcon from "@mui/icons-material/Publish";
 import { DIFFICULTY_SELECT_MENU_ITEMS } from "../../utilities/constants";
 import type { IBoulder } from "../../utilities/interfaces";
 import FormFieldsContainer from "./FormFieldsContainer";
 import { useAddBoulder } from "../../services";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import { useGeolocation } from "../../customHooks/useLocalization";
 
 export default function BoulderForm() {
-  const createBoulderMutation = useAddBoulder();
+  const [getLocalization, setGetLocalization] = useState(false);
   const [formData, setFormData] = useState<IBoulder>({
     name: "",
     description: "",
@@ -17,6 +19,10 @@ export default function BoulderForm() {
     longitude: 0,
     createdAt: new Date().toISOString(),
   });
+
+  const createBoulderMutation = useAddBoulder();
+  const { geolocation, errorGeolocation, loadingGeolocation } =
+    useGeolocation(getLocalization);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,9 +40,22 @@ export default function BoulderForm() {
     createBoulderMutation.mutate(formData);
   };
 
+  useEffect(() => {
+    if (geolocation) {
+      setFormData((prev) => ({
+        ...prev,
+        latitude: geolocation.latitude,
+        longitude: geolocation.longitude,
+      }));
+    }
+  }, [geolocation]);
+
+  const handleClickLocation = () => {
+    setGetLocalization(true);
+  };
+
   return (
     <form onSubmit={handleSubmit}>
-      <Typography>helllo</Typography>
       <FormFieldsContainer
         fields={[
           {
@@ -79,9 +98,36 @@ export default function BoulderForm() {
           },
         ]}
       />
-      <Button variant="contained" endIcon={<PublishIcon />} type="submit">
-        Salva Boulder
-      </Button>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          pt: 5,
+          width: "55%",
+          justifyContent: "space-between",
+        }}
+      >
+        <IconButton
+          aria-label="delete"
+          size="large"
+          sx={{ color: "green" }}
+          loading={loadingGeolocation}
+        >
+          <MyLocationIcon onClick={handleClickLocation} />
+        </IconButton>
+        <Button
+          variant="contained"
+          endIcon={<PublishIcon />}
+          type="submit"
+          size="large"
+          loading={createBoulderMutation.isPending}
+        >
+          Salva Boulder
+        </Button>
+      </Box>
+      {errorGeolocation && (
+        <Typography>Impossibile ottenere la localizzazione</Typography>
+      )}
     </form>
   );
 }
