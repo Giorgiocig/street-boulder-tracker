@@ -18,3 +18,8 @@ type SelectFieldType = {
 };
 
 export type FieldType = TextFieldType | SelectFieldType;
+
+export type LocalizationType = {
+  latitude: number;
+  longitude: number;
+};
