@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import SelectForm from "../form/SelectForm";
 import type { IFormFieldsContainerProps } from "../../utilities/interfaces";
 
@@ -6,7 +6,7 @@ export default function FormFieldsContainer({
   fields,
 }: IFormFieldsContainerProps) {
   return (
-    <>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
       {fields.map((field, idx) =>
         field.select ? (
           <SelectForm
@@ -24,9 +24,11 @@ export default function FormFieldsContainer({
             variant={field.variant}
             onChange={field.onChange}
             value={field.value}
+            multiline
+            rows={field.label === "descrizione" ? 2 : 1}
           />
         )
       )}
-    </>
+    </Box>
   );
 }
