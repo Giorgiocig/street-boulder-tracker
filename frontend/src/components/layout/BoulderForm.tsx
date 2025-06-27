@@ -3,20 +3,20 @@ import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useState } from "react";
 import PublishIcon from "@mui/icons-material/Publish";
 import { DIFFICULTY_SELECT_MENU_ITEMS } from "../../utilities/constants";
-import type { IBoulder } from "../../utilities/interfaces";
 import FormFieldsContainer from "./FormFieldsContainer";
 import { useAddBoulder } from "../../services";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { useGeolocation } from "../../customHooks/useLocalization";
+import type { IBoulderForm } from "../../utilities/interfaces";
 
 export default function BoulderForm() {
   const [getLocalization, setGetLocalization] = useState(false);
-  const [formData, setFormData] = useState<IBoulder>({
+  const [formData, setFormData] = useState<IBoulderForm>({
     name: "",
     description: "",
     difficulty: "facile",
-    latitude: 0,
-    longitude: 0,
+    latitude: "",
+    longitude: "",
     createdAt: new Date().toISOString(),
   });
 
@@ -26,32 +26,41 @@ export default function BoulderForm() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => {
-      return {
-        ...prevFormData,
-        [name]: name === "lat" || name === "long" ? parseFloat(value) : value,
-      };
-    });
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log(formData);
-    createBoulderMutation.mutate(formData);
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   useEffect(() => {
     if (geolocation) {
       setFormData((prev) => ({
         ...prev,
-        latitude: geolocation.latitude,
-        longitude: geolocation.longitude,
+        latitude: geolocation.latitude.toString(),
+        longitude: geolocation.longitude.toString(),
       }));
     }
   }, [geolocation]);
 
   const handleClickLocation = () => {
     setGetLocalization(true);
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    const lat = parseFloat(formData.latitude);
+    const long = parseFloat(formData.longitude);
+    if (isNaN(lat) || isNaN(long)) {
+      alert("Latitudine e longitudine devono essere numeri validi.");
+      return;
+    }
+    const formattedData = {
+      ...formData,
+      latitude: lat,
+      longitude: long,
+    };
+    console.log(formattedData);
+    createBoulderMutation.mutate(formattedData);
   };
 
   return (
