@@ -1,4 +1,4 @@
-import type { IBoulder } from "../interfaces";
+import type { IBoulderForm } from "../interfaces";
 
 type TextFieldType = {
   id: string;
@@ -13,7 +13,7 @@ type TextFieldType = {
 type SelectFieldType = {
   select: true;
   menuItems: string[];
-  setFormData: React.Dispatch<React.SetStateAction<IBoulder>>;
+  setFormData: React.Dispatch<React.SetStateAction<IBoulderForm>>;
   value: string;
 };
 
