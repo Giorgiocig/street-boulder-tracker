@@ -2,13 +2,20 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, vi, expect } from "vitest";
 import BoulderForm from "../BoulderForm";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 describe("BoulderForm", () => {
   it("submits the form with correct data", async () => {
     const user = userEvent.setup();
     const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-    render(<BoulderForm />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <BoulderForm />
+      </QueryClientProvider>
+    );
 
     await user.type(screen.getByLabelText("nome"), "Test Boulder");
     await user.type(screen.getByLabelText("descrizione"), "Una descrizione");
@@ -32,8 +39,9 @@ describe("BoulderForm", () => {
       name: "Test Boulder",
       description: "Una descrizione",
       difficulty: "medio",
-      lat: "45.0",
-      long: "9.0",
+      latitude: 45.0,
+      longitude: 9.0,
+      createdAt: expect.any(String),
     });
 
     consoleSpy.mockRestore();
