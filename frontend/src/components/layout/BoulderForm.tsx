@@ -5,10 +5,10 @@ import PublishIcon from "@mui/icons-material/Publish";
 import { DIFFICULTY_SELECT_MENU_ITEMS } from "../../utilities/constants";
 import type { IBoulder } from "../../utilities/interfaces";
 import FormFieldsContainer from "./FormFieldsContainer";
-import { useAddBoulder } from "../../hooks/useAddBoulders";
+import { useAddBoulder } from "../../services";
 
 export default function BoulderForm() {
-  const { mutate, isError, error } = useAddBoulder();
+  const createBoulderMutation = useAddBoulder();
   const [formData, setFormData] = useState<IBoulder>({
     name: "",
     description: "",
@@ -23,8 +23,7 @@ export default function BoulderForm() {
     setFormData((prevFormData) => {
       return {
         ...prevFormData,
-        [name]:
-          name === "lat" || name === "long" ? parseFloat(value) || 0 : value,
+        [name]: name === "lat" || name === "long" ? parseFloat(value) : value,
       };
     });
   };
@@ -32,10 +31,8 @@ export default function BoulderForm() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log(formData);
-    mutate(formData);
+    createBoulderMutation.mutate(formData);
   };
-
-  console.log(isError && error);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -68,7 +65,7 @@ export default function BoulderForm() {
             id: "textfield-lat",
             label: "lat",
             variant: "outlined",
-            name: "lat",
+            name: "latitude",
             value: formData.latitude,
             onChange: handleChange,
           },
@@ -76,7 +73,7 @@ export default function BoulderForm() {
             id: "textfield-long",
             label: "long",
             variant: "outlined",
-            name: "long",
+            name: "longitude",
             value: formData.longitude,
             onChange: handleChange,
           },
