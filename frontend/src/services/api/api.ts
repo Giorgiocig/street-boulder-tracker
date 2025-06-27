@@ -1,0 +1,16 @@
+import type { IBoulder } from "../../utilities/interfaces";
+
+export const getBoulders = async (): Promise<IBoulder[]> => {
+  const res = await fetch("http://localhost:3000/v1/boulders/get");
+  const data = await res.json();
+  return data;
+};
+
+export const addBoulder = async (boulder: IBoulder): Promise<IBoulder> => {
+  const res = await fetch("http://localhost:3000/v1/boulders/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(boulder),
+  });
+  return res.json();
+};
