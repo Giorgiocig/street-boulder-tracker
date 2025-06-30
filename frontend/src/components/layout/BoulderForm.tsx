@@ -8,9 +8,11 @@ import { useAddBoulder } from "../../services";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { useGeolocation } from "../../customHooks/useLocalization";
 import type { IBoulderForm } from "../../utilities/interfaces";
+import LeafletMapViewer from "../common/LeafletMapViewer";
 
 export default function BoulderForm() {
   const [getLocalization, setGetLocalization] = useState(false);
+  const [latLong, setLatLong] = useState<[number, number] | null>(null);
   const [formData, setFormData] = useState<IBoulderForm>({
     name: "",
     description: "",
@@ -31,6 +33,10 @@ export default function BoulderForm() {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    setLatLong([parseFloat(formData.latitude), parseFloat(formData.longitude)]);
+  }, [formData.latitude, formData.longitude]);
 
   useEffect(() => {
     if (geolocation) {
@@ -59,7 +65,6 @@ export default function BoulderForm() {
       latitude: lat,
       longitude: long,
     };
-    console.log(formattedData);
     createBoulderMutation.mutate(formattedData);
   };
 
@@ -107,29 +112,44 @@ export default function BoulderForm() {
           },
         ]}
       />
+      <Button
+        sx={{
+          mt: 4,
+          p: {
+            xs: "2rem 2rem 2rem 2rem",
+          },
+        }}
+        variant="outlined"
+        endIcon={<MyLocationIcon />}
+        loading={loadingGeolocation}
+        size="large"
+        onClick={handleClickLocation}
+      >
+        Localizzati
+      </Button>
+      <LeafletMapViewer
+        latLong={latLong}
+        setFormData={setFormData}
+        name={formData.name}
+      />
       <Box
         sx={{
           display: "flex",
-          alignItems: "center",
           pt: 5,
-          width: "55%",
-          justifyContent: "space-between",
+          justifyContent: "center",
         }}
       >
-        <IconButton
-          aria-label="delete"
-          size="large"
-          sx={{ color: "green" }}
-          loading={loadingGeolocation}
-        >
-          <MyLocationIcon onClick={handleClickLocation} />
-        </IconButton>
         <Button
           variant="contained"
           endIcon={<PublishIcon />}
           type="submit"
           size="large"
           loading={createBoulderMutation.isPending}
+          sx={{
+            p: {
+              xs: "2rem 2rem 2rem 2rem",
+            },
+          }}
         >
           Salva Boulder
         </Button>
