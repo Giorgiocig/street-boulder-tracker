@@ -28,3 +28,9 @@ export interface IBoulderForm {
   longitude: string;
   createdAt: string;
 }
+
+export interface ILeafletMapViewerProps {
+  latLong: [number, number] | null;
+  setFormData: React.Dispatch<React.SetStateAction<IBoulderForm>>;
+  name: string;
+}
