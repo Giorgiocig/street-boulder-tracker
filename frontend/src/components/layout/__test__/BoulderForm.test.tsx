@@ -3,16 +3,27 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, vi, expect } from "vitest";
 import BoulderForm from "../BoulderForm";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { useAddBoulder } from "../../../services";
 
 const queryClient = new QueryClient();
 const mutateMock = vi.fn();
+
+let mockGeolocation: null | { latitude: number; longitude: number } = null;
 
 vi.mock("../../../services", () => ({
   useAddBoulder: () => ({
     mutate: mutateMock,
     isPending: false,
   }),
+}));
+
+vi.mock("../../../customHooks/useLocalization", () => ({
+  useGeolocation: () => {
+    return {
+      geolocation: mockGeolocation,
+      errorGeolocation: false,
+      loadingGeolocation: false,
+    };
+  },
 }));
 
 describe("BoulderForm", () => {
@@ -51,5 +62,24 @@ describe("BoulderForm", () => {
       longitude: 9.0,
       createdAt: expect.any(String),
     });
+  });
+
+  it('updates lat/long when "Localizzati" is clicked', async () => {
+    // mock values
+    mockGeolocation = { latitude: 42.1234, longitude: 13.5678 };
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <BoulderForm />
+      </QueryClientProvider>
+    );
+
+    const user = userEvent.setup();
+
+    const button = screen.getByRole("button", { name: /localizzati/i });
+    await user.click(button);
+
+    expect(screen.getByLabelText(/^lat$/i)).toHaveValue("42.1234");
+    expect(screen.getByLabelText(/^long$/i)).toHaveValue("13.5678");
   });
 });
