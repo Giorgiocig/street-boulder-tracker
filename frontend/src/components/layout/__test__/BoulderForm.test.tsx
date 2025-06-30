@@ -3,13 +3,21 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, vi, expect } from "vitest";
 import BoulderForm from "../BoulderForm";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { useAddBoulder } from "../../../services";
 
 const queryClient = new QueryClient();
+const mutateMock = vi.fn();
+
+vi.mock("../../../services", () => ({
+  useAddBoulder: () => ({
+    mutate: mutateMock,
+    isPending: false,
+  }),
+}));
 
 describe("BoulderForm", () => {
   it("submits the form with correct data", async () => {
     const user = userEvent.setup();
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -35,7 +43,7 @@ describe("BoulderForm", () => {
     const submitBtn = screen.getByRole("button", { name: /salva boulder/i });
     await user.click(submitBtn);
 
-    expect(consoleSpy).toHaveBeenCalledWith({
+    expect(mutateMock).toHaveBeenCalledWith({
       name: "Test Boulder",
       description: "Una descrizione",
       difficulty: "medio",
@@ -43,7 +51,5 @@ describe("BoulderForm", () => {
       longitude: 9.0,
       createdAt: expect.any(String),
     });
-
-    consoleSpy.mockRestore();
   });
 });
