@@ -27,6 +27,11 @@ export function useGeolocation(isLocationRequested: boolean) {
       (err) => {
         setErrorGeoLocation(err.message);
         setLoadingGeolocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
       }
     );
   }, [isLocationRequested]);
