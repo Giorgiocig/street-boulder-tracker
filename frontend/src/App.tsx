@@ -1,10 +1,11 @@
 import "./App.css";
-import BoulderForm from "./components/layout/BoulderForm";
+import "leaflet/dist/leaflet.css";
+import Main from "./components/layout/Main";
 
 function App() {
   return (
     <>
-      <BoulderForm />
+      <Main />
     </>
   );
 }
