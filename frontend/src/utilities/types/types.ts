@@ -23,3 +23,5 @@ export type LocalizationType = {
   latitude: number;
   longitude: number;
 };
+
+export type Difficulty = "facile" | "medio" | "difficile";
