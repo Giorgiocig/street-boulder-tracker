@@ -1,23 +1,22 @@
 import { Box, Typography } from "@mui/material";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { useGetBoulders } from "../../services";
 
 import { getDivIcon } from "../../utilities/constants/helpers";
 import { COLOR_MAP, type IBoulder } from "../../utilities";
 
-export default function LeafletBouldersViewer() {
-  const response = useGetBoulders();
-
-  const boulders = response.data;
-
+export default function LeafletBouldersViewer({
+  boulders,
+}: {
+  boulders: IBoulder[] | undefined;
+}) {
   const lastBoulder = boulders && boulders.slice(-1)[0];
   if (!lastBoulder) return <Typography>Caricamento mppa...</Typography>;
 
   return (
-    <Box style={{ height: "400px", width: "100%", marginTop: "2rem" }}>
+    <Box style={{ height: "400px", width: "90%", marginTop: "2rem" }}>
       <MapContainer
         center={[lastBoulder.latitude, lastBoulder.longitude]}
-        zoom={15}
+        zoom={12}
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
@@ -27,7 +26,7 @@ export default function LeafletBouldersViewer() {
           maxZoom={19}
         />
         {boulders &&
-          boulders.map((boulder: IBoulder, idx) => (
+          boulders.map((boulder: IBoulder, idx: number) => (
             <Marker
               position={[boulder.latitude, boulder.longitude]}
               key={idx}
