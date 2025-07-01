@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, vi, expect } from "vitest";
 import FormFieldsContainer from "../FormFieldsContainer";
 
-describe("BoulderFormContainer", () => {
+describe("FormFieldsContainer", () => {
   it("should render TextField", async () => {
     const handleChange = vi.fn();
     render(
