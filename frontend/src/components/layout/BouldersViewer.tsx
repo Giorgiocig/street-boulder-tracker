@@ -1,12 +1,16 @@
+import { Box } from "@mui/material";
+import { useGetBoulders } from "../../services";
+import BoulderCardViewer from "../common/BoulderCardViewer";
 import LeafletBouldersViewer from "../common/LeafletBouldersViewer";
-import LeafletMapViewer from "../common/LeafletMapViewer";
 
-type Props = {};
+export default function BouldersViewer() {
+  const response = useGetBoulders();
 
-export default function BouldersViewer({}: Props) {
+  const boulders = response.data;
   return (
-    <div>
-      <LeafletBouldersViewer />
-    </div>
+    <Box sx={{ display: "flex" }}>
+      <LeafletBouldersViewer boulders={boulders} />
+      <BoulderCardViewer boulders={boulders} />
+    </Box>
   );
 }
