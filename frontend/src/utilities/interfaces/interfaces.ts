@@ -1,4 +1,4 @@
-import type { FieldType } from "../types";
+import type { Difficulty, FieldType } from "../types";
 
 export interface ISelectForm {
   menuItems: string[];
@@ -9,7 +9,7 @@ export interface ISelectForm {
 export interface IBoulder {
   name: string;
   description: string;
-  difficulty: string;
+  difficulty: Difficulty;
   latitude: number;
   longitude: number;
   createdAt: string;
@@ -23,7 +23,7 @@ export interface IFormFieldsContainerProps {
 export interface IBoulderForm {
   name: string;
   description: string;
-  difficulty: string;
+  difficulty: Difficulty;
   latitude: string;
   longitude: string;
   createdAt: string;
