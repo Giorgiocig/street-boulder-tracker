@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import PublishIcon from "@mui/icons-material/Publish";
 import { DIFFICULTY_SELECT_MENU_ITEMS } from "../../utilities/constants";
