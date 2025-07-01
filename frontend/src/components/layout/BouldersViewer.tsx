@@ -1,5 +1,12 @@
+import LeafletBouldersViewer from "../common/LeafletBouldersViewer";
+import LeafletMapViewer from "../common/LeafletMapViewer";
+
 type Props = {};
 
 export default function BouldersViewer({}: Props) {
-  return <div>Boulder Map e Boulder Card</div>;
+  return (
+    <div>
+      <LeafletBouldersViewer />
+    </div>
+  );
 }
