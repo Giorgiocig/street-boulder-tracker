@@ -49,7 +49,10 @@ export default function BoulderForm() {
   }, [geolocation]);
 
   const handleClickLocation = () => {
-    setGetLocalization(true);
+    setGetLocalization(false);
+    setTimeout(() => {
+      setGetLocalization(true);
+    }, 0);
   };
 
   const handleSubmit = (e: any) => {
