@@ -5,6 +5,7 @@ import type {
   IBoulderForm,
   ILeafletMapViewerProps,
 } from "../../utilities/interfaces";
+import { Box } from "@mui/material";
 
 export default function LeafletMapViewer({
   latLong,
@@ -26,7 +27,7 @@ export default function LeafletMapViewer({
   };
 
   return (
-    <div style={{ height: "400px", width: "100%", marginTop: "2rem" }}>
+    <Box style={{ height: "400px", width: "100%", marginTop: "2rem" }}>
       <MapContainer
         center={latLong}
         zoom={15}
@@ -47,6 +48,6 @@ export default function LeafletMapViewer({
         </Marker>
         <RecenterMap latLong={latLong} />
       </MapContainer>
-    </div>
+    </Box>
   );
 }
