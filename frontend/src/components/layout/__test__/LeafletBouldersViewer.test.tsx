@@ -14,6 +14,9 @@ describe("LeafletBouldersViewer", () => {
       TileLayer: () => <div>TileLayer</div>,
       Marker: ({ children }: any) => <div>{children}</div>,
       Popup: ({ children }: any) => <div>{children}</div>,
+      useMap: () => ({
+        setView: vi.fn(),
+      }),
     }));
 
     const bouldersMock: IBoulder[] = [
@@ -56,6 +59,9 @@ describe("LeafletBouldersViewer", () => {
       TileLayer: () => <div>TileLayer</div>,
       Marker: ({ children }: any) => <div>{children}</div>,
       Popup: ({ children }: any) => <div>{children}</div>,
+      useMap: () => ({
+        setView: vi.fn(),
+      }),
     }));
 
     const { default: LeafletBouldersViewerMocked } = await import(
@@ -67,5 +73,40 @@ describe("LeafletBouldersViewer", () => {
     );
 
     expect(screen.getByText("Caricamento mppa...")).toBeDefined();
+  });
+  it("centers map when latLng is defined", async () => {
+    const setViewMock = vi.fn();
+
+    vi.doMock("react-leaflet", () => ({
+      MapContainer: ({ children }: any) => <div>{children}</div>,
+      TileLayer: () => <div>TileLayer</div>,
+      Marker: ({ children }: any) => <div>{children}</div>,
+      Popup: ({ children }: any) => <div>{children}</div>,
+      useMap: () => ({
+        setView: setViewMock,
+      }),
+    }));
+
+    const { default: LeafletBouldersViewerMocked } = await import(
+      "../../common/LeafletBouldersViewer"
+    );
+
+    render(
+      <LeafletBouldersViewerMocked
+        boulders={[
+          {
+            latitude: 41.9,
+            longitude: 12.5,
+            name: "Boulder 1",
+            description: "Descrizione 1",
+            difficulty: "facile",
+            createdAt: "2023-01-01T00:00:00.000Z",
+          },
+        ]}
+        latLng={[41.9, 12.5]}
+      />
+    );
+
+    expect(setViewMock).toHaveBeenCalledWith([41.9, 12.5], 17);
   });
 });
