@@ -8,6 +8,8 @@ import MyLocationIcon from "@mui/icons-material/MyLocation";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDeleteBoulder } from "../../services";
+import { useState } from "react";
+import BoulderForm from "../layout/BoulderForm";
 
 export default function BasicCard({
   boulder,
@@ -16,6 +18,7 @@ export default function BasicCard({
   boulder: IBoulder;
   setLatLng: (arg: number[]) => void;
 }) {
+  const [isOpen, setIsOpen] = useState(false);
   const deleteBoulderMutation = useDeleteBoulder();
 
   const handleClickLocation = () => {
@@ -31,8 +34,9 @@ export default function BasicCard({
   };
 
   const handleClicEdit = () => {
-    console.log("Edit");
+    setIsOpen(!isOpen);
   };
+
   return (
     <Card>
       <Box
@@ -60,7 +64,7 @@ export default function BasicCard({
           <IconButton aria-label="delete" onClick={handleClickDelete}>
             <DeleteIcon />
           </IconButton>
-          <IconButton aria-label="delete" onClick={handleClicEdit}>
+          <IconButton aria-label="edit" onClick={handleClicEdit}>
             <EditIcon />
           </IconButton>
         </Stack>
@@ -75,6 +79,7 @@ export default function BasicCard({
           Localizza il boulder
         </Button>
       </CardActions>
+      {isOpen && <BoulderForm boulder={boulder} />}
     </Card>
   );
 }
