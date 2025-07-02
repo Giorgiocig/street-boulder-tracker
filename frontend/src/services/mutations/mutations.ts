@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addBoulder } from "../api";
+import { addBoulder, deleteBoulder } from "../api";
 import type { IBoulder } from "../../utilities/interfaces";
 
 export const useAddBoulder = () => {
@@ -19,6 +19,17 @@ export const useAddBoulder = () => {
       console.log("error");
     },
     // on Settled --> end  mutation
+    onSettled: async (_, error) => {
+      if (error) console.log(error);
+      else await queryClient.invalidateQueries({ queryKey: ["boulders"] });
+    },
+  });
+};
+
+export const useDeleteBoulder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => deleteBoulder(id),
     onSettled: async (_, error) => {
       if (error) console.log(error);
       else await queryClient.invalidateQueries({ queryKey: ["boulders"] });
