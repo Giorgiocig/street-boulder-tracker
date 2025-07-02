@@ -14,3 +14,10 @@ export const addBoulder = async (boulder: IBoulder): Promise<IBoulder> => {
   });
   return res.json();
 };
+
+export const deleteBoulder = async (id: number): Promise<any> => {
+  const res = await fetch(`http://localhost:3000/v1/boulders/${id}`, {
+    method: "DELETE",
+  });
+  return await res.json();
+};
