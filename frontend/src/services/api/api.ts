@@ -6,11 +6,11 @@ export const getBoulders = async (): Promise<IBoulder[]> => {
   return data;
 };
 
-export const addBoulder = async (boulder: IBoulder): Promise<IBoulder> => {
+export const addBoulder = async (data: IBoulder): Promise<IBoulder> => {
   const res = await fetch("http://localhost:3000/v1/boulders/add", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(boulder),
+    body: JSON.stringify(data),
   });
   return res.json();
 };
@@ -18,6 +18,18 @@ export const addBoulder = async (boulder: IBoulder): Promise<IBoulder> => {
 export const deleteBoulder = async (id: number): Promise<any> => {
   const res = await fetch(`http://localhost:3000/v1/boulders/${id}`, {
     method: "DELETE",
+  });
+  return await res.json();
+};
+
+export const updateBoulder = async (
+  id: number,
+  data: IBoulder
+): Promise<any> => {
+  const res = await fetch(`http://localhost:3000/v1/boulders/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
   });
   return await res.json();
 };
