@@ -4,13 +4,13 @@ import { useState } from "react";
 import PublishIcon from "@mui/icons-material/Publish";
 import { DIFFICULTY_SELECT_MENU_ITEMS } from "../../utilities/constants";
 import FormFieldsContainer from "./FormFieldsContainer";
-import { useAddBoulder } from "../../services";
+import { useAddBoulder, useUpdateBoulder } from "../../services";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { useGeolocation } from "../../customHooks/useLocalization";
-import type { IBoulderForm } from "../../utilities/interfaces";
+import type { IBoulder, IBoulderForm } from "../../utilities/interfaces";
 import LeafletMapViewer from "../common/LeafletMapViewer";
 
-export default function BoulderForm() {
+export default function BoulderForm({ boulder }: { boulder?: IBoulder }) {
   const [getLocalization, setGetLocalization] = useState(false);
   const [latLong, setLatLong] = useState<[number, number] | null>(null);
   const [formData, setFormData] = useState<IBoulderForm>({
@@ -25,6 +25,8 @@ export default function BoulderForm() {
   const createBoulderMutation = useAddBoulder();
   const { geolocation, errorGeolocation, loadingGeolocation } =
     useGeolocation(getLocalization);
+
+  const updateBoulderMutation = useUpdateBoulder();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,6 +50,19 @@ export default function BoulderForm() {
     }
   }, [geolocation]);
 
+  useEffect(() => {
+    if (boulder) {
+      setFormData({
+        name: boulder.name,
+        description: boulder.description,
+        difficulty: boulder.difficulty,
+        latitude: boulder.latitude.toString(),
+        longitude: boulder.longitude.toString(),
+        createdAt: boulder.createdAt,
+      });
+    }
+  }, [boulder]);
+
   const handleClickLocation = () => {
     setGetLocalization(false);
     setTimeout(() => {
@@ -68,7 +83,11 @@ export default function BoulderForm() {
       latitude: lat,
       longitude: long,
     };
-    createBoulderMutation.mutate(formattedData);
+    if (boulder && boulder.id) {
+      updateBoulderMutation.mutate({ id: boulder.id, data: formattedData });
+    } else {
+      createBoulderMutation.mutate(formattedData);
+    }
   };
 
   return (
@@ -131,7 +150,11 @@ export default function BoulderForm() {
         Localizzati
       </Button>
       <LeafletMapViewer
-        latLong={latLong}
+        latLong={
+          boulder
+            ? [parseFloat(formData.latitude), parseFloat(formData.longitude)]
+            : latLong
+        }
         setFormData={setFormData}
         name={formData.name}
       />
@@ -154,7 +177,7 @@ export default function BoulderForm() {
             },
           }}
         >
-          Salva Boulder
+          {boulder ? "modifica il boulder" : "salva il boulder"}
         </Button>
       </Box>
       {errorGeolocation && (
