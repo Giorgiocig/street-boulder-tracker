@@ -3,11 +3,14 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 import { getDivIcon } from "../../utilities/constants/helpers";
 import { COLOR_MAP, type IBoulder } from "../../utilities";
+import { RecenterMap } from "./RecenterMap";
 
 export default function LeafletBouldersViewer({
   boulders,
+  latLng,
 }: {
   boulders: IBoulder[] | undefined;
+  latLng: [latitude: number, longitude: number] | null;
 }) {
   const lastBoulder = boulders && boulders.slice(-1)[0];
   if (!lastBoulder) return <Typography>Caricamento mppa...</Typography>;
@@ -40,7 +43,7 @@ export default function LeafletBouldersViewer({
               </Popup>
             </Marker>
           ))}
-        {/* <RecenterMap latLong={latLong} /> */}
+        {latLng && <RecenterMap latLong={latLng} />}
       </MapContainer>
     </Box>
   );
