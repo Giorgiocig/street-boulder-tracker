@@ -10,6 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useDeleteBoulder } from "../../services";
 import { useState } from "react";
 import BoulderForm from "../layout/BoulderForm";
+import FullScreenDialog from "./FullScreenDialog";
 
 export default function BasicCard({
   boulder,
@@ -79,6 +80,9 @@ export default function BasicCard({
           Localizza il boulder
         </Button>
       </CardActions>
+      <FullScreenDialog setIsOpen={setIsOpen} isOpen={isOpen}>
+        <BoulderForm boulder={boulder} />
+      </FullScreenDialog>
       {isOpen && <BoulderForm boulder={boulder} />}
     </Card>
   );
