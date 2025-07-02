@@ -5,7 +5,7 @@ export function RecenterMap({ latLong }: { latLong: [number, number] }) {
   const map = useMap();
 
   useEffect(() => {
-    map.setView(latLong);
+    map.setView(latLong, 17);
   }, [latLong, map]);
 
   return null;
