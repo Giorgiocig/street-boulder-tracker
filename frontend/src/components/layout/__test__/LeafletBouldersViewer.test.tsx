@@ -40,7 +40,9 @@ describe("LeafletBouldersViewer", () => {
       "../../common/LeafletBouldersViewer"
     );
 
-    render(<LeafletBouldersViewerMocked boulders={bouldersMock} />);
+    render(
+      <LeafletBouldersViewerMocked boulders={bouldersMock} latLng={[1, 2]} />
+    );
 
     expect(screen.getByText("Boulder 1")).toBeDefined();
     expect(screen.getByText("Descrizione 1")).toBeDefined();
@@ -60,7 +62,9 @@ describe("LeafletBouldersViewer", () => {
       "../../common/LeafletBouldersViewer"
     );
 
-    render(<LeafletBouldersViewerMocked boulders={undefined} />);
+    render(
+      <LeafletBouldersViewerMocked boulders={undefined} latLng={[1, 2]} />
+    );
 
     expect(screen.getByText("Caricamento mppa...")).toBeDefined();
   });
