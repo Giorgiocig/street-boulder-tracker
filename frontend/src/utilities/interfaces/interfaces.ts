@@ -7,6 +7,7 @@ export interface ISelectForm {
 }
 
 export interface IBoulder {
+  id: number;
   name: string;
   description: string;
   difficulty: Difficulty;
