@@ -11,6 +11,7 @@ import { useDeleteBoulder } from "../../services";
 import { useState } from "react";
 import BoulderForm from "../layout/BoulderForm";
 import FullScreenDialog from "./FullScreenDialog";
+import AlertDialog from "./AlertDialog";
 
 export default function BasicCard({
   boulder,
@@ -19,14 +20,19 @@ export default function BasicCard({
   boulder: IBoulder;
   setLatLng: (arg: number[]) => void;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenFullScreenDialog, setIsOpenFullScreenDialog] = useState(false);
+  const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false);
   const deleteBoulderMutation = useDeleteBoulder();
 
   const handleClickLocation = () => {
     setLatLng([boulder.latitude, boulder.longitude]);
   };
 
-  const handleClickDelete = async () => {
+  const handleClickDelete = () => {
+    setIsOpenAlertDialog(true);
+  };
+
+  const handleDelete = async () => {
     if (typeof boulder.id === "number")
       await deleteBoulderMutation.mutateAsync(boulder.id);
     else {
@@ -35,7 +41,7 @@ export default function BasicCard({
   };
 
   const handleClicEdit = () => {
-    setIsOpen(!isOpen);
+    setIsOpenFullScreenDialog(!isOpenFullScreenDialog);
   };
 
   return (
@@ -80,10 +86,19 @@ export default function BasicCard({
           Localizza il boulder
         </Button>
       </CardActions>
-      <FullScreenDialog setIsOpen={setIsOpen} isOpen={isOpen}>
+      <FullScreenDialog
+        setIsOpen={setIsOpenFullScreenDialog}
+        isOpen={isOpenFullScreenDialog}
+      >
         <BoulderForm boulder={boulder} />
       </FullScreenDialog>
-      {isOpen && <BoulderForm boulder={boulder} />}
+      {isOpenFullScreenDialog && <BoulderForm boulder={boulder} />}
+      <AlertDialog
+        open={isOpenAlertDialog}
+        setOpen={setIsOpenAlertDialog}
+        handleDelete={handleDelete}
+        boulderName={boulder.name}
+      />
     </Card>
   );
 }
