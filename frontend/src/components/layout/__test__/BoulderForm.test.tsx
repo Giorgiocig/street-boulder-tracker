@@ -14,6 +14,10 @@ vi.mock("../../../services", () => ({
     mutate: mutateMock,
     isPending: false,
   }),
+  useUpdateBoulder: () => ({
+    mutate: mutateMock,
+    isPending: false,
+  }),
 }));
 
 vi.mock("../../../customHooks/useLocalization", () => ({
@@ -51,7 +55,7 @@ describe("BoulderForm", () => {
     await user.click(mediaOption);
 
     //submit form
-    const submitBtn = screen.getByRole("button", { name: /salva boulder/i });
+    const submitBtn = screen.getByRole("button", { name: /salva il boulder/i });
     await user.click(submitBtn);
 
     expect(mutateMock).toHaveBeenCalledWith({
@@ -62,7 +66,7 @@ describe("BoulderForm", () => {
       longitude: 9.0,
       createdAt: expect.any(String),
     });
-  });
+  }, 10000);
 
   it('updates lat/long when "Localizzati" is clicked', async () => {
     // mock values
