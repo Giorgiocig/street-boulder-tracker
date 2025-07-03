@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import LeafletMapViewer from "../../common/LeafletMapViewer";
+import LeafletMapViewer from "../LeafletMapViewer";
 
 vi.mock("react-leaflet", () => ({
   MapContainer: ({ children }: any) => <div data-testid="map">{children}</div>,

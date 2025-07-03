@@ -40,7 +40,7 @@ describe("LeafletBouldersViewer", () => {
 
     // After mocking, import component with the mocks
     const { default: LeafletBouldersViewerMocked } = await import(
-      "../../common/LeafletBouldersViewer"
+      "../LeafletBouldersViewer"
     );
 
     render(
@@ -51,7 +51,7 @@ describe("LeafletBouldersViewer", () => {
     expect(screen.getByText("Descrizione 1")).toBeDefined();
     expect(screen.getByText("Boulder 2")).toBeDefined();
     expect(screen.getByText("Descrizione 2")).toBeDefined();
-  });
+  }, 5000);
 
   it("display text if last boulder is undefined", async () => {
     vi.doMock("react-leaflet", () => ({
@@ -65,7 +65,7 @@ describe("LeafletBouldersViewer", () => {
     }));
 
     const { default: LeafletBouldersViewerMocked } = await import(
-      "../../common/LeafletBouldersViewer"
+      "../LeafletBouldersViewer"
     );
 
     render(
@@ -88,7 +88,7 @@ describe("LeafletBouldersViewer", () => {
     }));
 
     const { default: LeafletBouldersViewerMocked } = await import(
-      "../../common/LeafletBouldersViewer"
+      "../LeafletBouldersViewer"
     );
 
     render(

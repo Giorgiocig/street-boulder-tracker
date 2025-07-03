@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import BasicCard from "../../common/BasicCard";
+import BasicCard from "../BasicCard";
 import { boulderFixture } from "./fixtures";
 
 const queryClient = new QueryClient();
@@ -34,22 +34,38 @@ describe("BasicCard", () => {
     expect(screen.getByText("Boulder 1")).toBeInTheDocument();
   });
 
-  it("should call delete mutation on delete click", async () => {
-    const mockSetLatLng = vi.fn();
+  it("should open alert dialog when delete icon is clicked", async () => {
     const user = userEvent.setup();
-
-    mutateAsyncMock.mockResolvedValue(undefined);
-
     render(
       <QueryClientProvider client={queryClient}>
-        <BasicCard boulder={boulderFixture} setLatLng={mockSetLatLng} />
+        <BasicCard boulder={boulderFixture} setLatLng={vi.fn()} />
       </QueryClientProvider>
     );
 
     const deleteButton = screen.getByLabelText("delete");
     await user.click(deleteButton);
 
-    expect(mutateAsyncMock).toHaveBeenCalledWith(123);
+    // Controlla se dialog è aperto verificando testo o bottoni
+    expect(screen.getByText(/Cancellazione boulder/i)).toBeInTheDocument();
+  });
+
+  it("should call delete mutation when accepting deletion in dialog", async () => {
+    const user = userEvent.setup();
+    mutateAsyncMock.mockResolvedValue(undefined);
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <BasicCard boulder={boulderFixture} setLatLng={vi.fn()} />
+      </QueryClientProvider>
+    );
+
+    const deleteButton = screen.getByLabelText("delete");
+    await user.click(deleteButton);
+
+    const acceptButton = screen.getByRole("button", { name: "Accetta" });
+    await user.click(acceptButton);
+
+    expect(mutateAsyncMock).toHaveBeenCalledWith(boulderFixture.id);
   });
 
   it("should open FullScrreenDialog when edit is clicked", async () => {
