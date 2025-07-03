@@ -12,7 +12,6 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import { type TransitionProps } from "@mui/material/transitions";
-import BoulderForm from "../layout/BoulderForm";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -57,7 +56,7 @@ export default function FullScreenDialog({
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              TITOLO
+              Boulder editor
             </Typography>
             <Button autoFocus color="inherit" onClick={handleClose}>
               save
