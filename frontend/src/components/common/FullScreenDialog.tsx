@@ -27,9 +27,9 @@ export default function FullScreenDialog({
   isOpen,
   setIsOpen,
 }: {
-  children: any;
+  children: React.ReactNode;
   isOpen: boolean;
-  setIsOpen: any;
+  setIsOpen: (arg: boolean) => void;
 }) {
   const handleClose = () => {
     setIsOpen(false);
