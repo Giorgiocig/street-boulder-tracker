@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import type { IBoulder } from "../../utilities";
 import BasicCard from "./BasicCard";
 
@@ -10,10 +10,17 @@ export default function BoulderCardViewer({
   setLatLng: any;
 }) {
   return (
-    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-      {boulders?.map((boulder, idx) => (
-        <BasicCard boulder={boulder} setLatLng={setLatLng} key={idx} />
-      ))}
-    </Box>
+    <>
+      <Typography variant="h5" pb={2}>
+        Boulders creati: {boulders?.length}
+      </Typography>
+      <Grid container spacing={2}>
+        {boulders?.map((boulder, idx) => (
+          <Grid size={4}>
+            <BasicCard boulder={boulder} setLatLng={setLatLng} key={idx} />
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 }
