@@ -139,6 +139,7 @@ export default function BoulderForm({ boulder }: { boulder?: IBoulder }) {
           mt: 4,
           p: {
             xs: "2rem 2rem 2rem 2rem",
+            md: "1rem 1rem 1rem 1rem",
           },
         }}
         variant="outlined"
@@ -174,6 +175,7 @@ export default function BoulderForm({ boulder }: { boulder?: IBoulder }) {
           sx={{
             p: {
               xs: "2rem 2rem 2rem 2rem",
+              md: "1rem 1rem 1rem 1rem",
             },
           }}
         >
