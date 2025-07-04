@@ -54,24 +54,34 @@ export default function BasicCard({
         }}
       >
         <CardContent>
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
+          <Typography gutterBottom sx={{ fontSize: 14 }} color="secondary">
             {boulder.description}
           </Typography>
-          <Typography variant="h5" component="div">
+          <Typography
+            variant="h5"
+            component="div"
+            color="primary"
+            fontWeight="bold"
+          >
             {boulder.name}
           </Typography>
-          <Typography sx={{ color: "text.secondary", mt: 1, mb: 1.5 }}>
+          <Typography sx={{ mt: 1, mb: 1.5 }} color="secondary">
             {boulder.difficulty}
           </Typography>
         </CardContent>
         <Stack sx={{ gap: 2 }}>
-          <IconButton aria-label="delete" onClick={handleClickDelete}>
+          <IconButton
+            aria-label="delete"
+            onClick={handleClickDelete}
+            color="secondary"
+          >
             <DeleteIcon />
           </IconButton>
-          <IconButton aria-label="edit" onClick={handleClicEdit}>
+          <IconButton
+            aria-label="edit"
+            onClick={handleClicEdit}
+            color="secondary"
+          >
             <EditIcon />
           </IconButton>
         </Stack>
