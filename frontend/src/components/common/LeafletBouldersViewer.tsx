@@ -16,7 +16,7 @@ export default function LeafletBouldersViewer({
   if (!lastBoulder) return <Typography>Caricamento mppa...</Typography>;
 
   return (
-    <Box style={{ height: "400px", width: "100%", marginTop: "2rem" }}>
+    <Box style={{ height: "450px", width: "100%", marginTop: "2rem" }}>
       <MapContainer
         center={[lastBoulder.latitude, lastBoulder.longitude]}
         zoom={12}
