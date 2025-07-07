@@ -19,6 +19,7 @@ export class BoulderService {
         latitude: dto.latitude,
         longitude: dto.longitude,
         createdAt: dto.createdAt,
+        eventId: dto.eventId,
         ...(dto.userId ? { userId: dto.userId } : null),
       };
       return await this.prisma.boulder.create({ data: boulder });
