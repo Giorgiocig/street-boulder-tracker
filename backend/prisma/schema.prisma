@@ -13,6 +13,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Event {
+  id Int @id @default(autoincrement())
+  name String @unique
+  description String?
+  date DateTime
+  city String
+  latitude Float
+  longitude Float
+  createdAt DateTime @default(now())
+
+  boulders Boulder[]
+  
+  @@map("events")
+}
+
 model User {
   id Int @id @default(autoincrement())
   username String @unique
@@ -34,6 +49,9 @@ model Boulder{
 
   userId Int?
   user User?  @relation(fields: [userId], references: [id], onDelete:Cascade)
+
+  eventId Int
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   photos Photo[]
   @@map("boulders")
