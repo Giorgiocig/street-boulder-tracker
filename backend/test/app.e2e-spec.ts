@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from 'src/app.module';
 import * as pactum from 'pactum';
 import { Difficulty } from 'src/utilities/enums/enums';
-import { boulderDtoFixture } from './fixture';
+import { boulderDtoFixture, eventBodyRequestFixture } from './fixture';
 import { PrismaClient } from '@prisma/client';
 
 describe('App e2e', () => {
@@ -25,17 +25,6 @@ describe('App e2e', () => {
     await prisma.boulder.deleteMany();
     // clean up boulder
     await prisma.event.deleteMany();
-    // create event
-    await prisma.event.create({
-      data: {
-        id: 1,
-        name: 'Street Boulder 2025',
-        date: new Date('2025-07-07T14:00:00Z'),
-        city: 'Torino',
-        latitude: 45.0703,
-        longitude: 7.6869,
-      },
-    });
   });
 
   afterAll(async () => {
@@ -44,11 +33,23 @@ describe('App e2e', () => {
   });
   describe('Boulders', () => {
     describe('addBoulder', () => {
-      it('should insert a boulder', () => {
-        return pactum
+      it('should insert a boulder', async () => {
+        const eventId = await pactum
+          .spec()
+          .post('http://localhost:3000/v1/events/add')
+          .withBody(eventBodyRequestFixture)
+          .expectStatus(201)
+          // save generated id
+          .returns('id');
+
+        await pactum
           .spec()
           .post('http://localhost:3000/v1/boulders/add')
-          .withBody(boulderDtoFixture)
+          .withBody({
+            ...boulderDtoFixture,
+            // assign id dinamically
+            eventId,
+          })
           .expectStatus(201)
           .stores('boulderId', 'id');
       });
@@ -62,6 +63,7 @@ describe('App e2e', () => {
             latitude: 45.123,
             longitude: 7.123,
             createdAt: '2025-06-18T14:30:00.000Z',
+            eventId: 1,
           })
           .expectStatus(400);
       });
