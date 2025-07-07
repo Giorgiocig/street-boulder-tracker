@@ -36,4 +36,8 @@ export class BoulderDto {
   @IsOptional()
   @IsNumber()
   userId?: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  eventId: number;
 }
