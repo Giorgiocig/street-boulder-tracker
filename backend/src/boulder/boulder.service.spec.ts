@@ -82,6 +82,7 @@ describe('BoulderService', () => {
           longitude: baseDtoNoUser.longitude,
           createdAt: baseDtoNoUser.createdAt,
           userId: baseDtoNoUser.userId,
+          eventId: baseDtoNoUser.eventId,
         },
       });
 
@@ -107,6 +108,7 @@ describe('BoulderService', () => {
           longitude: baseDtoWithUser.longitude,
           createdAt: baseDtoWithUser.createdAt,
           userId: baseDtoWithUser.userId,
+          eventId: baseDtoWithUser.eventId,
         },
       });
       expect(result).toEqual(baseDtoWithUser);
@@ -123,6 +125,7 @@ describe('BoulderService', () => {
           latitude: baseDtoNoUser.latitude,
           longitude: baseDtoNoUser.longitude,
           createdAt: baseDtoNoUser.createdAt,
+          eventId: baseDtoNoUser.eventId,
         },
       });
       expect(result).toEqual(baseDtoNoUser);
