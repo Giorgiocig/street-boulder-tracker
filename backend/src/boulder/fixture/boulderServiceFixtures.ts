@@ -9,6 +9,7 @@ export const createBaseDto = (userId?: number): BoulderDto => {
     latitude: 45.123,
     longitude: 7.123,
     createdAt: '2025-06-18T14:30:00.000Z',
+    eventId: 1,
   };
   return !userId ? baseDto : { ...baseDto, userId: userId };
 };
