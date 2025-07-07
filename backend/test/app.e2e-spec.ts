@@ -4,20 +4,44 @@ import { AppModule } from 'src/app.module';
 import * as pactum from 'pactum';
 import { Difficulty } from 'src/utilities/enums/enums';
 import { boulderDtoFixture } from './fixture';
+import { PrismaClient } from '@prisma/client';
 
 describe('App e2e', () => {
   let app: INestApplication;
+  let prisma: PrismaClient;
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
+
     app = moduleRef.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     await app.init();
-    // pactum needs a server to make request
     await app.listen(3000);
+
+    prisma = new PrismaClient();
+
+    // clean up event boulder (child of event)
+    await prisma.boulder.deleteMany();
+    // clean up boulder
+    await prisma.event.deleteMany();
+    // create event
+    await prisma.event.create({
+      data: {
+        id: 1,
+        name: 'Street Boulder 2025',
+        date: new Date('2025-07-07T14:00:00Z'),
+        city: 'Torino',
+        latitude: 45.0703,
+        longitude: 7.6869,
+      },
+    });
   });
-  afterAll(() => app.close());
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+    await app.close();
+  });
   describe('Boulders', () => {
     describe('addBoulder', () => {
       it('should insert a boulder', () => {
