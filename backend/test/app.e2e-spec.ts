@@ -9,6 +9,7 @@ import { PrismaClient } from '@prisma/client';
 describe('App e2e', () => {
   let app: INestApplication;
   let prisma: PrismaClient;
+
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
@@ -147,6 +148,83 @@ describe('App e2e', () => {
         .spec()
         .patch('http://localhost:3000/v1/boulders/999')
         .expectStatus(404);
+    });
+  });
+  describe('Events', () => {
+    beforeAll(async () => {
+      await prisma.boulder.deleteMany();
+      await prisma.event.deleteMany();
+    });
+    describe('addEvent', () => {
+      it('should insert a single event', async () => {
+        await pactum
+          .spec()
+          .post('http://localhost:3000/v1/events/add')
+          .withBody(eventBodyRequestFixture)
+          .expectStatus(201)
+          .stores('eventId', 'id');
+      });
+      it('should throw an error without name', () => {
+        return pactum
+          .spec()
+          .post('http://localhost:3000/v1/boulders/add')
+          .withBody({
+            description: 'description',
+            date: '2025-06-18T14:30:00.000Z',
+            city: 'Milan',
+            latitude: 45.123,
+            longitude: 7.123,
+            createdAt: '2025-06-18T14:30:00.000Z',
+          })
+          .expectStatus(400);
+      });
+    });
+    describe('getEvents', () => {
+      it('should return all events', () => {
+        return pactum
+          .spec()
+          .get('http://localhost:3000/v1/events/get')
+          .expectStatus(200)
+          .expectJsonLike([
+            {
+              id: '$S{eventId}',
+              name: eventBodyRequestFixture.name,
+            },
+          ]);
+      });
+    });
+    describe('updateEvent', () => {
+      it('should update an event', () => {
+        return pactum
+          .spec()
+          .patch('http://localhost:3000/v1/events/{id}')
+          .withPathParams('id', '$S{eventId}')
+          .withBody({ name: 'Updated Event' })
+          .expectStatus(200)
+          .expectBodyContains('Updated Event');
+      });
+      it('should return 400 if id is invalid', () => {
+        return pactum
+          .spec()
+          .patch('http://localhost:3000/v1/events/invalidId')
+          .expectStatus(400);
+      });
+      it('should return 404 if events doesn t exist', () => {
+        return pactum
+          .spec()
+          .patch('http://localhost:3000/v1/events/999')
+          .expectStatus(404);
+      });
+    });
+    describe('deleteEvent', () => {
+      it('should delete an event', () => {
+        return pactum
+          .spec()
+          .delete('http://localhost:3000/v1/events/{id}')
+          .withPathParams('id', '$S{eventId}')
+          .expectStatus(200)
+          .expectJsonLike({ id: '$S{eventId}', name: 'Updated Event' });
+      });
     });
   });
 });
