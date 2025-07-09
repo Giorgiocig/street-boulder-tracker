@@ -1,4 +1,3 @@
-import { Boulder } from '@prisma/client';
 import { BoulderDto } from 'src/boulder/dto';
 import { EventDto } from 'src/event/dto';
 import { Difficulty } from 'src/utilities/enums/enums';
