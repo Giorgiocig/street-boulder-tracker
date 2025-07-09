@@ -1,5 +1,5 @@
 export const eventFixture = {
-  name: 'Event',
+  name: 'Test Event',
   description: 'description',
   date: '2025-06-18T14:30:00.000Z',
   city: 'Milan',
