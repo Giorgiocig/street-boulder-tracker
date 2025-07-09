@@ -138,7 +138,7 @@ describe('BoulderService', () => {
       expect(boulders[0].name).toBe('Test Boulder');
     });
   });
-  describe('getBoulders', () => {
+  describe('getBoulder', () => {
     it('should return one boulder', async () => {
       const boulder = await service.getBoulder(1);
       expect(boulder.name).toBe('Test Boulder');
@@ -182,7 +182,7 @@ describe('BoulderService', () => {
       );
     });
   });
-  describe('updateBoulders', () => {
+  describe('deleteBoulders', () => {
     it('should delete boulder successfully', async () => {
       const mockBoulder = { ...createBaseDto(), id: 1 };
       mockPrismaService.boulder.findUnique.mockResolvedValue(mockBoulder);
