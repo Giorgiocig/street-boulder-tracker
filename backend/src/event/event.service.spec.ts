@@ -3,6 +3,10 @@ import { EventService } from './event.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { eventFixture } from './fixture';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
 describe('EventService', () => {
   let service: EventService;
@@ -11,6 +15,10 @@ describe('EventService', () => {
   const mockPrismaService = {
     event: {
       create: jest.fn(),
+      findMany: jest.fn().mockResolvedValue([eventFixture]),
+      findUnique: jest.fn().mockResolvedValue(eventFixture),
+      update: jest.fn().mockResolvedValue(eventFixture),
+      delete: jest.fn().mockResolvedValue(eventFixture),
     },
   };
 
@@ -64,5 +72,70 @@ describe('EventService', () => {
       },
     });
     expect(result).toEqual(eventFixture);
+  });
+  it('should throw an error if prisma does it', async () => {
+    mockPrismaService.event.create.mockRejectedValue(new Error('DB error'));
+    await expect(service.addEvent(eventFixture)).rejects.toThrow(
+      'Failed to create event',
+    );
+  });
+  describe('getEvents', () => {
+    it('should return list of boulders', async () => {
+      const events = await service.getEvents();
+      expect(events).toHaveLength(1);
+      expect(events[0].name).toBe('Test Event');
+    });
+  });
+  describe('updateEvent', () => {
+    it('should update', async () => {
+      mockPrismaService.event.findUnique.mockResolvedValue({
+        ...eventFixture,
+        id: 1,
+      });
+      mockPrismaService.event.update.mockImplementation(({ data }) => ({
+        ...eventFixture,
+        ...data,
+      }));
+      const event = await service.updateEvent(1, { name: 'new' });
+      expect(event.name).toBe('new');
+    });
+    it('should fail if event doesn’t exist', async () => {
+      mockPrismaService.event.findUnique.mockResolvedValue(null);
+      await expect(service.updateEvent(999, { name: 'new' })).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+    it('should throw InternalServerErrorException on update failure', async () => {
+      mockPrismaService.event.findUnique.mockResolvedValue(eventFixture);
+      mockPrismaService.event.update.mockRejectedValue(new Error('DB failure'));
+      await expect(service.updateEvent(1, { name: 'new' })).rejects.toThrow(
+        InternalServerErrorException,
+      );
+    });
+  });
+  describe('deleteEvent', () => {
+    it('should delete', async () => {
+      const mockEvent = { ...eventFixture, id: 1 };
+      mockPrismaService.event.findUnique.mockResolvedValue(mockEvent);
+      mockPrismaService.event.delete.mockResolvedValue(mockEvent);
+      const result = await service.deleteEvent(mockEvent.id);
+      expect(prisma.event.delete).toHaveBeenCalledWith({
+        where: { id: mockEvent.id },
+      });
+      expect(result).toEqual(mockEvent);
+    });
+    it('should fail if eventa doesn’t exist', async () => {
+      mockPrismaService.event.findUnique.mockResolvedValue(null);
+      await expect(service.deleteEvent(999)).rejects.toThrow(NotFoundException);
+    });
+    it('should throw InternalServerErrorException on delete failure', async () => {
+      mockPrismaService.event.findUnique.mockResolvedValue(eventFixture);
+
+      mockPrismaService.event.delete.mockRejectedValue(new Error('DB failure'));
+
+      await expect(service.deleteEvent(1)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+    });
   });
 });
