@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EventService } from './event.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
-import { eventFixture } from './fixture';
+import { eventFixture, eventWithBouldersFixture } from './fixture';
 import {
   InternalServerErrorException,
   NotFoundException,
@@ -19,6 +19,7 @@ describe('EventService', () => {
       findUnique: jest.fn().mockResolvedValue(eventFixture),
       update: jest.fn().mockResolvedValue(eventFixture),
       delete: jest.fn().mockResolvedValue(eventFixture),
+      getEventWithBoulders: jest.fn().mockResolvedValue(eventFixture),
     },
   };
 
@@ -134,6 +135,31 @@ describe('EventService', () => {
       mockPrismaService.event.delete.mockRejectedValue(new Error('DB failure'));
 
       await expect(service.deleteEvent(1)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+    });
+  });
+  describe('getEventWithBouldersById', () => {
+    it('should get boulders', async () => {
+      mockPrismaService.event.findUnique.mockResolvedValue(
+        eventWithBouldersFixture,
+      );
+      const eventWithBoulders = await service.getEventWithBouldersById(1);
+      expect(eventWithBoulders).toHaveLength(2);
+      expect(eventWithBoulders[0].name).toBe('Test Boulder1');
+    });
+    it('should fail if eventa doesn’t exist', async () => {
+      mockPrismaService.event.findUnique.mockResolvedValue(null);
+      await expect(service.getEventWithBouldersById(999)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+    it('should throw InternalServerErrorException on get failure', async () => {
+      mockPrismaService.event.findUnique.mockResolvedValue(eventFixture);
+      mockPrismaService.event.findUnique.mockRejectedValue(
+        new Error('DB failure'),
+      );
+      await expect(service.getEventWithBouldersById(1)).rejects.toThrow(
         InternalServerErrorException,
       );
     });
