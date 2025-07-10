@@ -86,4 +86,26 @@ export class EventService {
       throw new InternalServerErrorException('Failed to delete event', error);
     }
   }
+  async getEventWithBouldersById(id: number) {
+    try {
+      const existingEventWithBoulders = await this.prisma.event.findUnique({
+        where: { id },
+        include: { boulders: true },
+      });
+      if (!existingEventWithBoulders) {
+        this.logger.warn(`Event with ID ${id} not found`);
+        throw new NotFoundException(`Event with ID ${id} not found`);
+      }
+      return existingEventWithBoulders.boulders;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(
+        `Failed to fetch event with boulder with ID ${id}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException('Failed to fetch event');
+    }
+  }
 }
