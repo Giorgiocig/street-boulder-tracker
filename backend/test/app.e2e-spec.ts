@@ -226,5 +226,32 @@ describe('App e2e', () => {
           .expectJsonLike({ id: '$S{eventId}', name: 'Updated Event' });
       });
     });
+    describe('getEventWithBouldersById', () => {
+      it('should return boulders associated with event', async () => {
+        const eventId = await pactum
+          .spec()
+          .post('http://localhost:3000/v1/events/add')
+          .withBody(eventBodyRequestFixture)
+          .expectStatus(201)
+          .returns('id');
+
+        await pactum
+          .spec()
+          .post('http://localhost:3000/v1/boulders/add')
+          .withBody({
+            ...boulderDtoFixture,
+            eventId,
+          })
+          .expectStatus(201)
+          .stores('boulderId', 'id');
+
+        return pactum
+          .spec()
+          .get('http://localhost:3000/v1/events/{id}/boulders')
+          .withPathParams('id', eventId)
+          .expectStatus(200)
+          .expectJsonLength('', 1);
+      });
+    });
   });
 });
