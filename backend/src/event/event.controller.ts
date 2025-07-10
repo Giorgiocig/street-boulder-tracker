@@ -12,6 +12,11 @@ import {
 import { EventService } from './event.service';
 import { EventDto } from './dto';
 import { UpdateEventDto } from './dto/updateEvent.dto';
+import { Boulder } from '@prisma/client';
+
+type EventWithBoulders = Event & {
+  boulders: Boulder[];
+};
 
 @Controller('v1/events')
 export class EventController {
@@ -39,5 +44,12 @@ export class EventController {
   @Delete(':id')
   async deleteEvent(@Param('id', ParseIntPipe) id: number): Promise<any> {
     return await this.eventService.deleteEvent(id);
+  }
+
+  @Get(':id/boulders')
+  async getEventWithBouldersById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<any> {
+    return await this.eventService.getEventWithBouldersById(id);
   }
 }
