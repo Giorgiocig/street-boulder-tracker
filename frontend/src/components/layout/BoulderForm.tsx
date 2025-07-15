@@ -21,11 +21,9 @@ export default function BoulderForm({ boulder }: { boulder?: IBoulder }) {
     longitude: "",
     createdAt: new Date().toISOString(),
   });
-
-  const createBoulderMutation = useAddBoulder();
   const { geolocation, errorGeolocation, loadingGeolocation } =
     useGeolocation(getLocalization);
-
+  const createBoulderMutation = useAddBoulder();
   const updateBoulderMutation = useUpdateBoulder();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
