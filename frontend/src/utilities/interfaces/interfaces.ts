@@ -30,8 +30,24 @@ export interface IBoulderForm {
   createdAt: string;
 }
 
+export interface IEventForm {
+  name: string;
+  description: string;
+  date: string;
+  city: string;
+  latitude: string;
+  longitude: string;
+  createdAt: string;
+}
+
 export interface ILeafletMapViewerProps {
   latLong: [number, number] | null;
   setFormData: React.Dispatch<React.SetStateAction<IBoulderForm>>;
   name: string;
+}
+
+export interface NominatimCity {
+  display_name: string;
+  lat: string;
+  lng: string;
 }
