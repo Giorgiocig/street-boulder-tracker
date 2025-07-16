@@ -1,24 +1,28 @@
-import { Button, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import type { IEventForm } from "../../utilities";
+import { Button, TextField, Typography } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import { AutocompleteCity } from "../form/AutocompleteCity";
-import FormFieldsContainer from "./FormFieldsContainer";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { useGeolocation } from "../../customHooks/useLocalization";
 import PublishIcon from "@mui/icons-material/Publish";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EventSchema } from "../../zodSchemas";
+
+export type EventFormValues = z.infer<typeof EventSchema>;
 
 export default function EventForm() {
   const [getLocalization, setGetLocalization] = useState(false);
   const [latLong, setLatLong] = useState<[number, number] | null>(null);
-  const [formData, setFormData] = useState<IEventForm>({
-    name: "",
-    description: "",
-    date: "",
-    city: "",
-    latitude: "",
-    longitude: "",
-    createdAt: new Date().toISOString(),
-  });
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<EventFormValues>({ resolver: zodResolver(EventSchema) });
 
   const { geolocation, errorGeolocation, loadingGeolocation } =
     useGeolocation(getLocalization);
@@ -32,40 +36,23 @@ export default function EventForm() {
 
   useEffect(() => {
     if (geolocation) {
-      setFormData((prev) => ({
-        ...prev,
-        latitude: geolocation.latitude.toString(),
-        longitude: geolocation.longitude.toString(),
-      }));
+      setLatLong([geolocation.latitude, geolocation.longitude]);
+
+      setValue("lat", geolocation.latitude.toString());
+      setValue("long", geolocation.longitude.toString());
     }
   }, [geolocation]);
 
-  const handleCitySelect = (city: {
-    name: string;
-    lat: number;
-    lng: number;
-  }) => {
-    setFormData((prev) => ({
-      ...prev,
-      city: city.name,
-      latitude: city.lat.toString(),
-      longitude: city.lng.toString(),
-    }));
+  const handleCitySelect = (city: any) => {
+    setLatLong([city.lat, city.lng]);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log(formData);
-  };
+  const onSubmit = useCallback((data: EventFormValues) => {
+    console.log("onValid", data);
+  }, []);
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <AutocompleteCity onSelect={handleCitySelect} />
       <Typography>Inserisci una citta oppure geolocalizzati</Typography>
       <Button
@@ -84,25 +71,49 @@ export default function EventForm() {
       >
         Localizzati
       </Button>
-      <FormFieldsContainer
-        fields={[
-          {
-            id: "textfield-name",
-            label: "nome evento",
-            name: "name",
-            variant: "outlined",
-            onChange: handleChange,
-            value: formData.name,
-          },
-          {
-            id: "textfield-description",
-            label: "descrizione",
-            variant: "outlined",
-            name: "description",
-            onChange: handleChange,
-            value: formData.description,
-          },
-        ]}
+      <TextField
+        fullWidth
+        label="nome evento"
+        margin="normal"
+        {...register("name")}
+        error={!!errors.name}
+        helperText={
+          typeof errors.name?.message === "string" ? errors.name.message : ""
+        }
+      />
+      <TextField
+        fullWidth
+        label="descrizione"
+        margin="normal"
+        {...register("description")}
+        error={!!errors.description}
+        helperText={
+          typeof errors.description?.message === "string"
+            ? errors.description.message
+            : ""
+        }
+      />
+      <TextField
+        slotProps={{ inputLabel: { shrink: true } }}
+        fullWidth
+        label="latitudine"
+        margin="normal"
+        {...register("lat")}
+        error={!!errors.lat}
+        helperText={
+          typeof errors.lat?.message === "string" ? errors.lat.message : ""
+        }
+      />
+      <TextField
+        slotProps={{ inputLabel: { shrink: true } }}
+        fullWidth
+        label="longitudine"
+        margin="normal"
+        {...register("long")}
+        error={!!errors.long}
+        helperText={
+          typeof errors.long?.message === "string" ? errors.long.message : ""
+        }
       />
       <Button
         variant="contained"
