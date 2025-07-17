@@ -1,21 +1,23 @@
 import { Button, TextField, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { AutocompleteCity } from "../form/AutocompleteCity";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
-import { useGeolocation } from "../../customHooks/useLocalization";
 import PublishIcon from "@mui/icons-material/Publish";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import dayjs, { Dayjs } from "dayjs";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EventSchema } from "../../zodSchemas";
+import type { City } from "../../utilities";
+import { useAddEvent } from "../../services/mutations/Event";
+import DataPicker from "../form/DataPicker";
 
 export type EventFormValues = z.infer<typeof EventSchema>;
 
 export default function EventForm() {
-  const [getLocalization, setGetLocalization] = useState(false);
   const [latLong, setLatLong] = useState<[number, number] | null>(null);
-
+  const [dataPickerValue, setDataPickerValue] = useState<Dayjs | null>(dayjs());
+  const createEventMutation = useAddEvent();
   const {
     register,
     handleSubmit,
@@ -24,53 +26,45 @@ export default function EventForm() {
     formState: { errors },
   } = useForm<EventFormValues>({ resolver: zodResolver(EventSchema) });
 
-  const { geolocation, errorGeolocation, loadingGeolocation } =
-    useGeolocation(getLocalization);
-
-  const handleClickLocation = () => {
-    setGetLocalization(false);
-    setTimeout(() => {
-      setGetLocalization(true);
-    }, 0);
-  };
-
-  useEffect(() => {
-    if (geolocation) {
-      setLatLong([geolocation.latitude, geolocation.longitude]);
-
-      setValue("lat", geolocation.latitude.toString());
-      setValue("long", geolocation.longitude.toString());
-    }
-  }, [geolocation]);
-
-  const handleCitySelect = (city: any) => {
+  const handleCitySelect = (city: City) => {
+    console.log(city);
     setLatLong([city.lat, city.lng]);
+    setValue("city", city.name, { shouldValidate: true });
   };
 
-  const onSubmit = useCallback((data: EventFormValues) => {
-    console.log("onValid", data);
-  }, []);
+  const handleDataPickerSelect = (value: Dayjs | null) => {
+    setDataPickerValue(value);
+
+    if (value) {
+      setValue("date", value.toISOString(), { shouldValidate: true });
+    } else {
+      setValue("date", "", { shouldValidate: true });
+    }
+  };
+
+  const onSubmit = (data: EventFormValues) => {
+    if (!latLong) {
+      return;
+    }
+    const [latitude, longitude] = latLong;
+    const eventDate = new Date(data.date).toISOString();
+    const dataPayload = {
+      ...data,
+      latitude,
+      longitude,
+      date: eventDate,
+      createdAt: new Date().toISOString(),
+    };
+    createEventMutation.mutate(dataPayload);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <AutocompleteCity onSelect={handleCitySelect} />
-      <Typography>Inserisci una citta oppure geolocalizzati</Typography>
-      <Button
-        sx={{
-          mt: 4,
-          p: {
-            xs: "2rem 2rem 2rem 2rem",
-            md: "1rem 1rem 1rem 1rem",
-          },
-        }}
-        variant="outlined"
-        endIcon={<MyLocationIcon />}
-        loading={loadingGeolocation}
-        size="large"
-        onClick={handleClickLocation}
-      >
-        Localizzati
-      </Button>
+      <input type="hidden" {...register("city")} />
+      {errors.city && (
+        <Typography color="error">{errors.city.message}</Typography>
+      )}
       <TextField
         fullWidth
         label="nome evento"
@@ -93,26 +87,15 @@ export default function EventForm() {
             : ""
         }
       />
+      <DataPicker onSelect={handleDataPickerSelect} />
       <TextField
-        slotProps={{ inputLabel: { shrink: true } }}
         fullWidth
-        label="latitudine"
+        label="data evento"
         margin="normal"
-        {...register("lat")}
-        error={!!errors.lat}
+        {...register("date")}
+        error={!!errors.date}
         helperText={
-          typeof errors.lat?.message === "string" ? errors.lat.message : ""
-        }
-      />
-      <TextField
-        slotProps={{ inputLabel: { shrink: true } }}
-        fullWidth
-        label="longitudine"
-        margin="normal"
-        {...register("long")}
-        error={!!errors.long}
-        helperText={
-          typeof errors.long?.message === "string" ? errors.long.message : ""
+          typeof errors.date?.message === "string" ? errors.date.message : ""
         }
       />
       <Button
@@ -129,9 +112,6 @@ export default function EventForm() {
       >
         Inserisci evento
       </Button>
-      {errorGeolocation && (
-        <Typography>Impossibile ottenere la localizzazione</Typography>
-      )}
     </form>
   );
 }
