@@ -47,14 +47,14 @@ export const AutocompleteCity = ({
       onSelect({
         name: newValue.display_name,
         lat: parseFloat(newValue.lat),
-        lng: parseFloat(newValue.lng),
+        lng: parseFloat(newValue.lon),
       });
     }
   };
 
   return (
     <Autocomplete<NominatimCity>
-      filterOptions={(x) => x} // evita il filtro client-side
+      filterOptions={(x) => x} // bypass client-side filter
       options={options}
       getOptionLabel={(option) => option.display_name || ""}
       loading={loading}
