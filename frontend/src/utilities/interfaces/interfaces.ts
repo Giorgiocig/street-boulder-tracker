@@ -49,5 +49,11 @@ export interface ILeafletMapViewerProps {
 export interface NominatimCity {
   display_name: string;
   lat: string;
-  lng: string;
+  lon: string;
+}
+
+export interface City {
+  name: string;
+  lat: number;
+  lng: number;
 }
