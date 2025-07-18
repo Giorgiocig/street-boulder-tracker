@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor, act } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import EventForm from "../EventForm";
 import { Dayjs } from "dayjs";
@@ -13,7 +13,7 @@ vi.mock("../../../services/mutations/Event", () => ({
   }),
 }));
 
-// Mock per i componenti figli
+// Mock for child component
 vi.mock("../../form/AutocompleteCity", () => ({
   AutocompleteCity: ({ onSelect }: any) => (
     <button
@@ -25,6 +25,7 @@ vi.mock("../../form/AutocompleteCity", () => ({
   ),
 }));
 
+// Mock fo DataPicker
 vi.mock("../../form/DataPicker", () => ({
   default: ({ onSelect }: any) => (
     <button
@@ -53,16 +54,30 @@ describe("EventForm", () => {
     await user.type(nameInput, "evento");
     await user.type(descriptionInput, "description");
 
-    // Select city (this sets latLong state and city field)
+    // Select city
     await user.click(screen.getByText("Select City"));
+
+    // Wait for city to be set
+    await waitFor(() => {
+      const cityInput = document.querySelector(
+        'input[name="city"]'
+      ) as HTMLInputElement;
+      expect(cityInput?.value).toBe("Roma");
+    });
 
     // Select date
     await user.click(screen.getByText("Select Date"));
 
-    // Small delay to ensure state updates
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
+    // Wait for date to be set in the form
+    await waitFor(() => {
+      const dateInput = document.querySelector(
+        'input[name="date"]'
+      ) as HTMLInputElement;
+      expect(dateInput?.value).toBe("2025-06-18T14:30:00.000Z");
     });
+
+    // Additional wait to ensure all state updates are complete
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // Submit the form
     const submitButton = screen.getByRole("button", {
@@ -91,52 +106,34 @@ describe("EventForm", () => {
     );
   });
 
-  it("debug: check form submission flow", async () => {
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    render(<EventForm />);
-    const user = userEvent.setup();
-
-    // Fill in the form fields
-    await user.type(screen.getByLabelText(/nome evento/i), "evento");
-    await user.type(screen.getByLabelText(/descrizione/i), "description");
-
-    // Select city
-    await user.click(screen.getByText("Select City"));
-    await user.click(screen.getByText("Select Date"));
-
-    // Check form state
-    const form = screen.getByRole("form");
-    const formData = new FormData(form);
-    console.log("Form data:", Object.fromEntries(formData));
-
-    // Submit the form
-    const submitButton = screen.getByRole("button", {
-      name: /inserisci evento/i,
-    });
-    await user.click(submitButton);
-
-    // Wait a bit
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    console.log("Mutation called:", mutateMock.mock.calls.length);
-    console.log("Mutation calls:", mutateMock.mock.calls);
-
-    consoleSpy.mockRestore();
-  });
-
   it("handles form validation errors", async () => {
     render(<EventForm />);
     const user = userEvent.setup();
 
-    // Select city and date
+    // Select city and date but don't fill required text fields
     await user.click(screen.getByText("Select City"));
     await user.click(screen.getByText("Select Date"));
 
-    // Don't fill required fields and submit
+    // Wait for city and date to be set
+    await waitFor(() => {
+      const cityInput = document.querySelector(
+        'input[name="city"]'
+      ) as HTMLInputElement;
+      expect(cityInput?.value).toBe("Roma");
+    });
+
+    await waitFor(() => {
+      const dateInput = document.querySelector(
+        'input[name="date"]'
+      ) as HTMLInputElement;
+      expect(dateInput?.value).toBe("2025-06-18T14:30:00.000Z");
+    });
+
+    // Submit without filling required fields (name and description are empty)
     const submitButton = screen.getByRole("button", {
       name: /inserisci evento/i,
     });
+
     await user.click(submitButton);
 
     // Wait a bit and verify mutation was NOT called due to validation
