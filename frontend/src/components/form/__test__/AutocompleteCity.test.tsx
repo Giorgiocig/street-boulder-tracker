@@ -8,12 +8,12 @@ describe("Autocomplete", () => {
       {
         display_name: "Milano, Italia",
         lat: "45.4642",
-        lng: "9.1900",
+        lon: "9.1900",
       },
       {
         display_name: "Milano Marittima, Italia",
         lat: "44.286",
-        lng: "12.356",
+        lon: "12.356",
       },
     ];
 
