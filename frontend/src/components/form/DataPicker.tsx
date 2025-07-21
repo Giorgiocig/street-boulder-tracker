@@ -24,6 +24,11 @@ export default function ResponsiveDatePickers({
             onChange={onSelect}
             defaultValue={dayjs("2022-04-17")}
             slotProps={{
+              textField: {
+                inputProps: {
+                  "aria-label": "seleziona una data",
+                },
+              },
               openPickerButton: {
                 sx: {
                   color: "#2E8B57",
