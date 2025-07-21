@@ -6,3 +6,9 @@ export const addEvent = async (data: any): Promise<any> => {
   });
   return res.json();
 };
+
+export const getEvents = async () => {
+  const res = await fetch("http://localhost:3000/v1/events/get");
+  const data = await res.json();
+  return data;
+};
