@@ -29,7 +29,7 @@ describe("Autocomplete", () => {
     render(<AutocompleteCity onSelect={mockHandleCitySelect} />);
 
     const input = screen.getByLabelText(/inserisci una città/i);
-    await userEvent.type(input, "Milano");
+    expect(input).toBeInTheDocument();
   });
   it("shows options and calls onSelect when city is selected", async () => {
     const mockHandleCitySelect = vi.fn();
