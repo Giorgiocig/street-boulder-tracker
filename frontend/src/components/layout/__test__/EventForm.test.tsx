@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 // Mock the useAddEvent hook
 const mutateMock = vi.fn();
-vi.mock("../../../services/mutations/Event", () => ({
+vi.mock("../../../services", () => ({
   useAddEvent: () => ({
     mutate: mutateMock,
   }),

@@ -9,8 +9,9 @@ import dayjs, { Dayjs } from "dayjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EventSchema } from "../../zodSchemas";
 import type { City } from "../../utilities";
-import { useAddEvent } from "../../services/mutations/Event";
+
 import DataPicker from "../form/DataPicker";
+import { useAddEvent } from "../../services";
 
 export type EventFormValues = z.infer<typeof EventSchema>;
 
