@@ -21,7 +21,6 @@ export default function EventForm() {
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
   } = useForm<EventFormValues>({ resolver: zodResolver(EventSchema) });
@@ -34,7 +33,6 @@ export default function EventForm() {
 
   const handleDataPickerSelect = (value: Dayjs | null) => {
     setDataPickerValue(value);
-
     if (value) {
       setValue("date", value.toISOString(), { shouldValidate: true });
     } else {
@@ -47,19 +45,18 @@ export default function EventForm() {
       return;
     }
     const [latitude, longitude] = latLong;
-    const eventDate = new Date(data.date).toISOString();
     const dataPayload = {
       ...data,
       latitude,
       longitude,
-      date: eventDate,
+      date: dataPickerValue,
       createdAt: new Date().toISOString(),
     };
     createEventMutation.mutate(dataPayload);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form data-testid="event-form" onSubmit={handleSubmit(onSubmit)}>
       <AutocompleteCity onSelect={handleCitySelect} />
       <input type="hidden" {...register("city")} />
       {errors.city && (
@@ -88,16 +85,6 @@ export default function EventForm() {
         }
       />
       <DataPicker onSelect={handleDataPickerSelect} />
-      <TextField
-        fullWidth
-        label="data evento"
-        margin="normal"
-        {...register("date")}
-        error={!!errors.date}
-        helperText={
-          typeof errors.date?.message === "string" ? errors.date.message : ""
-        }
-      />
       <Button
         variant="contained"
         endIcon={<PublishIcon />}
