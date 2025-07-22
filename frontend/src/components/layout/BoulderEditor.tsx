@@ -3,19 +3,20 @@ import { Box, Button } from "@mui/material";
 import BoulderForm from "./BoulderForm";
 import BouldersViewer from "./BouldersViewer";
 import FullScreenDialog from "../common/FullScreenDialog";
+import { useToggle } from "../../customHooks/useToggle";
 
 export default function BoulderEditor() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setIsOpen(!isOpen);
-  };
+  const [value, setToggle] = useToggle(false);
   return (
     <Box sx={{ "max-width": "1280px", margin: " 0 auto", minHeight: "84.3vh" }}>
-      <Button variant="contained" size="large" onClick={handleClickOpen}>
+      <Button variant="contained" size="large" onClick={setToggle}>
         Inserisici boulder
       </Button>
-      <FullScreenDialog setIsOpen={setIsOpen} isOpen={isOpen}>
+      <FullScreenDialog
+        setIsOpen={setToggle}
+        isOpen={value}
+        titleText="Boulder Editor - Inserisci Boulder"
+      >
         <BoulderForm />
       </FullScreenDialog>
       <BouldersViewer />
