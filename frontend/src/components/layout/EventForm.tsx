@@ -1,5 +1,5 @@
 import { Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AutocompleteCity } from "../form/AutocompleteCity";
 import PublishIcon from "@mui/icons-material/Publish";
 import { useForm } from "react-hook-form";
@@ -55,6 +55,12 @@ export default function EventForm() {
     };
     createEventMutation.mutate(dataPayload);
   };
+
+  useEffect(() => {
+    if (dataPickerValue) {
+      setValue("date", dataPickerValue.toISOString());
+    }
+  }, []);
 
   return (
     <form data-testid="event-form" onSubmit={handleSubmit(onSubmit)}>
