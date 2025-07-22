@@ -26,10 +26,12 @@ export default function FullScreenDialog({
   children,
   isOpen,
   setIsOpen,
+  titleText,
 }: {
   children: React.ReactNode;
   isOpen: boolean;
   setIsOpen: (arg: boolean) => void;
+  titleText: string;
 }) {
   const handleClose = () => {
     setIsOpen(false);
@@ -56,7 +58,7 @@ export default function FullScreenDialog({
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Boulder editor
+              {titleText}
             </Typography>
             <Button autoFocus color="inherit" onClick={handleClose}>
               save

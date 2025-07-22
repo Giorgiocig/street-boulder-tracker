@@ -99,6 +99,7 @@ export default function BasicCard({
       <FullScreenDialog
         setIsOpen={setIsOpenFullScreenDialog}
         isOpen={isOpenFullScreenDialog}
+        titleText="Boulder Editor - Modifica Boulder"
       >
         <BoulderForm boulder={boulder} />
       </FullScreenDialog>
