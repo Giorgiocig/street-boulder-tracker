@@ -1,13 +1,13 @@
 import TitleBar from "../common/TitleBar";
 import Footer from "../common/Footer";
 import BoulderEditor from "./BoulderEditor";
-import EventForm from "./EventForm";
+import EventEditor from "../common/EventEditor";
 
 export default function Main() {
   return (
     <>
       <TitleBar />
-      <EventForm />
+      <EventEditor />
       <BoulderEditor />
       <Footer />
     </>
