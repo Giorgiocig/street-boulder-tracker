@@ -57,3 +57,11 @@ export interface City {
   lat: number;
   lng: number;
 }
+
+export interface IEventCard {
+  id?: number;
+  name: string;
+  description: string;
+  date: string;
+  city: string;
+}
