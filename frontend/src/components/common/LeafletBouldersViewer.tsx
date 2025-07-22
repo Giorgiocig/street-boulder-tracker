@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
-import { getDivIcon } from "../../utilities/constants/helpers";
+import { getDivIcon } from "../../utilities/helpers";
 import { COLOR_MAP, type IBoulder } from "../../utilities";
 import { RecenterMap } from "./RecenterMap";
 
