@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { COLOR_MAP } from "../constants";
+import { COLOR_MAP } from "../constants/constants";
 
 export const getMarkerIcon = (difficulty: "facile" | "medio" | "difficile") => {
   return new L.Icon({
@@ -11,6 +11,7 @@ export const getMarkerIcon = (difficulty: "facile" | "medio" | "difficile") => {
     shadowSize: [41, 41],
   });
 };
+
 export const getDivIcon = (color: "green" | "red" | "orange") =>
   L.divIcon({
     className: "custom-div-icon",
