@@ -1,4 +1,5 @@
 🧗 Street Boulder Tracker
+
 Street Boulder Tracker is a full-stack web application designed to simplify the management of bouldering problems during a street bouldering event.
 
 It allows organizers to create events, add and manage boulder problems, and visualize them on an interactive map and list. Built with modern technologies, it aims to streamline the setup and tracking process for grassroots climbing competitions.
