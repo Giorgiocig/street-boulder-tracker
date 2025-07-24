@@ -31,6 +31,7 @@ export interface IBoulderForm {
 }
 
 export interface IEventForm {
+  id?: number;
   name: string;
   description: string;
   date: string;
