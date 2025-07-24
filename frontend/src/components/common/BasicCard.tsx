@@ -108,7 +108,8 @@ export default function BasicCard({
         open={isOpenAlertDialog}
         setOpen={setIsOpenAlertDialog}
         handleDelete={handleDelete}
-        boulderName={boulder.name}
+        entityName={boulder.name}
+        entityTitle="boulder"
       />
     </Card>
   );

@@ -9,12 +9,14 @@ export default function AlertDialog({
   open,
   setOpen,
   handleDelete,
-  boulderName,
+  entityName,
+  entityTitle,
 }: {
   open: boolean;
   setOpen: (arg: boolean) => void;
   handleDelete: () => void;
-  boulderName: string;
+  entityName: string;
+  entityTitle: string;
 }) {
   const handleAccept = () => {
     handleDelete();
@@ -33,11 +35,11 @@ export default function AlertDialog({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title" data-testid="alert-dialog-title">
-        Cancellazione boulder - {boulderName}
+        Cancellazione {entityTitle} - {entityName}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Il boulder {boulderName} sta per essere cancellato clicca su accetta
+          {entityTitle} {entityName} sta per essere cancellato clicca su accetta
           per continuare o su annulla per annullare l operazione
         </DialogContentText>
       </DialogContent>
