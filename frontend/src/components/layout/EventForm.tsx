@@ -8,14 +8,14 @@ import dayjs, { Dayjs } from "dayjs";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EventSchema } from "../../zodSchemas";
-import type { City } from "../../utilities";
+import type { City, IEventForm } from "../../utilities";
 
 import DataPicker from "../form/DataPicker";
 import { useAddEvent } from "../../services";
 
 export type EventFormValues = z.infer<typeof EventSchema>;
 
-export default function EventForm() {
+export default function EventForm({ event }: { event: IEventForm }) {
   const [latLong, setLatLong] = useState<[number, number] | null>(null);
   const [dataPickerValue, setDataPickerValue] = useState<Dayjs | null>(dayjs());
   const createEventMutation = useAddEvent();
@@ -59,6 +59,15 @@ export default function EventForm() {
   useEffect(() => {
     if (dataPickerValue) {
       setValue("date", dataPickerValue.toISOString());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (event) {
+      setValue("name", event.name);
+      setValue("description", event.description);
+      setValue("city", event.city);
+      setValue("date", event.date);
     }
   }, []);
 
