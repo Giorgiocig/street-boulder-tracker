@@ -11,25 +11,61 @@ import { EventSchema } from "../../zodSchemas";
 import type { City, IEventForm } from "../../utilities";
 
 import DataPicker from "../form/DataPicker";
-import { useAddEvent } from "../../services";
+import { useAddEvent, useUpdateEvent } from "../../services";
 
 export type EventFormValues = z.infer<typeof EventSchema>;
 
-export default function EventForm({ event }: { event: IEventForm }) {
+export default function EventForm({ event }: { event?: IEventForm }) {
+  // states
+  const [cityValue, setCityValue] = useState("");
   const [latLong, setLatLong] = useState<[number, number] | null>(null);
   const [dataPickerValue, setDataPickerValue] = useState<Dayjs | null>(dayjs());
+  // mutations
   const createEventMutation = useAddEvent();
+  const updateEventMutation = useUpdateEvent();
+  // form setup
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<EventFormValues>({ resolver: zodResolver(EventSchema) });
 
+  useEffect(() => {
+    if (dataPickerValue) {
+      setValue("date", dataPickerValue.toISOString());
+    }
+  }, []);
+
+  // fill textfield with values
+  useEffect(() => {
+    if (event) {
+      const eventData = {
+        name: event.name,
+        description: event.description,
+        city: event.city,
+        date: event.date,
+      };
+      reset(eventData);
+
+      setCityValue(event.city);
+      setDataPickerValue(dayjs(event.date));
+      if (event.latitude && event.longitude) {
+        setLatLong([parseFloat(event.latitude), parseFloat(event.longitude)]);
+      }
+    } else {
+      const initialDate = dayjs();
+      setDataPickerValue(initialDate);
+      setValue("date", initialDate.toISOString(), { shouldValidate: true });
+    }
+  }, [event, reset]);
+
+  // HandleChange event handlers
   const handleCitySelect = (city: City) => {
-    console.log(city);
     setLatLong([city.lat, city.lng]);
     setValue("city", city.name, { shouldValidate: true });
+    setCityValue(city.name);
   };
 
   const handleDataPickerSelect = (value: Dayjs | null) => {
@@ -41,39 +77,39 @@ export default function EventForm({ event }: { event: IEventForm }) {
     }
   };
 
+  // onSubmit
   const onSubmit = (data: EventFormValues) => {
     if (!latLong) {
+      console.error(
+        "Latitudine e longitudine non impostate. Seleziona una città valida."
+      );
       return;
     }
     const [latitude, longitude] = latLong;
-    const dataPayload = {
-      ...data,
-      latitude,
-      longitude,
-      date: dataPickerValue,
-      createdAt: new Date().toISOString(),
-    };
-    createEventMutation.mutate(dataPayload);
+    if (event?.id) {
+      // Il payload non ha bisogno di createdAt e usa già i dati corretti da 'data'
+      const updatePayload = {
+        ...data,
+        latitude,
+        longitude,
+      };
+      console.log("Update evento:", updatePayload);
+      updateEventMutation.mutate({ id: event.id, data: updatePayload });
+    } else {
+      const createPayload = {
+        ...data,
+        latitude,
+        longitude,
+        createdAt: new Date().toISOString(),
+      };
+      console.log("Crea evento:", createPayload);
+      createEventMutation.mutate(createPayload);
+    }
   };
-
-  useEffect(() => {
-    if (dataPickerValue) {
-      setValue("date", dataPickerValue.toISOString());
-    }
-  }, []);
-
-  useEffect(() => {
-    if (event) {
-      setValue("name", event.name);
-      setValue("description", event.description);
-      setValue("city", event.city);
-      setValue("date", event.date);
-    }
-  }, []);
 
   return (
     <form data-testid="event-form" onSubmit={handleSubmit(onSubmit)}>
-      <AutocompleteCity onSelect={handleCitySelect} />
+      <AutocompleteCity onSelect={handleCitySelect} value={cityValue} />
       <input type="hidden" {...register("city")} />
       {errors.city && (
         <Typography color="error">{errors.city.message}</Typography>
