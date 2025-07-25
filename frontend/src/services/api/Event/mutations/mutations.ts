@@ -40,7 +40,7 @@ export const useDeleteEvent = () => {
 export const useUpdateEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: IEventForm }) =>
+    mutationFn: ({ id, data }: { id: number; data: Partial<IEventForm> }) =>
       updateEvent(id, data),
     onSettled: async (_, error) => {
       if (error) console.log(error);

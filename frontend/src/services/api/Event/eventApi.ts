@@ -24,7 +24,7 @@ export const deleteEvent = async (id: number): Promise<any> => {
 
 export const updateEvent = async (
   id: number,
-  data: IEventForm
+  data: Partial<IEventForm>
 ): Promise<any> => {
   const res = await fetch(`http://localhost:3000/v1/events/${id}`, {
     method: "PATCH",
