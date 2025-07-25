@@ -52,7 +52,7 @@ export default function EventForm({ event }: { event?: IEventForm }) {
       setCityValue(event.city);
       setDataPickerValue(dayjs(event.date));
       if (event.latitude && event.longitude) {
-        setLatLong([parseFloat(event.latitude), parseFloat(event.longitude)]);
+        setLatLong([event.latitude, event.longitude]);
       }
     } else {
       const initialDate = dayjs();
@@ -87,7 +87,6 @@ export default function EventForm({ event }: { event?: IEventForm }) {
     }
     const [latitude, longitude] = latLong;
     if (event?.id) {
-      // Il payload non ha bisogno di createdAt e usa già i dati corretti da 'data'
       const updatePayload = {
         ...data,
         latitude,
