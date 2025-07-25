@@ -42,7 +42,8 @@ export const AutocompleteCity = ({
           { signal: controller.signal, headers: { "Accept-Language": "it" } }
         );
         const data = await response.json();
-        setOptions(data);
+        // TO DO fix it
+        setOptions(Array.isArray(data) ? data : []);
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError")
           return;
