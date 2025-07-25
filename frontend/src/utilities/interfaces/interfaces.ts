@@ -36,8 +36,8 @@ export interface IEventForm {
   description: string;
   date: string;
   city: string;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   createdAt: string;
 }
 
