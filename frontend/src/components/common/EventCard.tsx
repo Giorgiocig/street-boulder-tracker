@@ -31,7 +31,7 @@ export default function EventCard(event: IEventForm) {
   const handleClickEdit = () => {
     setIsOpenFullScreenDialog(true);
   };
-  console.log(event.city);
+
   return (
     <Card
       sx={{
