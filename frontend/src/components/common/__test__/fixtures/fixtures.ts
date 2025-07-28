@@ -7,3 +7,14 @@ export const boulderFixture = {
   difficulty: "facile" as const,
   createdAt: "2023-01-01T00:00:00.000Z",
 };
+
+export const eventFixture = {
+  id: 1,
+  name: "Evento 1",
+  description: "event test",
+  date: "2023-01-01T00:00:00.000Z",
+  city: "roma",
+  latitude: 1,
+  longitude: 2,
+  createdAt: "2023-01-01T00:00:00.000Z",
+};
