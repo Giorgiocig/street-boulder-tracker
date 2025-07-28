@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addBoulder, deleteBoulder, updateBoulder } from "../api";
-import type { IBoulder } from "../../utilities/interfaces";
+import { addBoulder, deleteBoulder, updateBoulder } from "../boulderApi";
+import type { IBoulder } from "../../../utilities/interfaces";
 
 export const useAddBoulder = () => {
   const queryClient = useQueryClient();

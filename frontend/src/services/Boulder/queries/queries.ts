@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getBoulders } from "../api";
+import { getBoulders } from "../boulderApi";
 
 export const useGetBoulders = () => {
   return useQuery({
