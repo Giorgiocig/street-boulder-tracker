@@ -80,7 +80,8 @@ describe("BasicCard", () => {
 
     const openWindowBtn = screen.getByLabelText("edit");
     await user.click(openWindowBtn);
-    expect(await screen.findByText("Boulder editor")).toBeInTheDocument();
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveTextContent("Boulder Editor - Modifica Boulder");
   });
 
   it("should call localizza with correct parameters", async () => {
