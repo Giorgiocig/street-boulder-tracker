@@ -4,10 +4,11 @@ import userEvent from "@testing-library/user-event";
 import EventForm from "../EventForm";
 import { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 // Mock the useAddEvent hook
 const mutateMock = vi.fn();
-vi.mock("../../../services", () => ({
+vi.mock("../../../services/mutations/mutations", () => ({
   useAddEvent: () => ({
     mutate: mutateMock,
   }),
@@ -44,7 +45,11 @@ describe("EventForm", () => {
   });
 
   it("submits the form with correct data", async () => {
-    render(<EventForm />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <EventForm />
+      </QueryClientProvider>
+    );
     const user = userEvent.setup();
 
     // Fill in the form fields first
@@ -98,7 +103,11 @@ describe("EventForm", () => {
   });
 
   it("handles form validation errors", async () => {
-    render(<EventForm />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <EventForm />
+      </QueryClientProvider>
+    );
     const user = userEvent.setup();
 
     // Select city and date but don't fill required text fields
