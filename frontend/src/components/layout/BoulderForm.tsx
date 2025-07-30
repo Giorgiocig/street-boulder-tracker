@@ -9,6 +9,7 @@ import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { useGeolocation } from "../../customHooks/useLocalization";
 import type { IBoulder, IBoulderForm } from "../../utilities/interfaces";
 import LeafletMapViewer from "../common/LeafletMapViewer";
+import { useParams } from "react-router";
 
 export default function BoulderForm({ boulder }: { boulder?: IBoulder }) {
   const [getLocalization, setGetLocalization] = useState(false);
@@ -21,6 +22,8 @@ export default function BoulderForm({ boulder }: { boulder?: IBoulder }) {
     longitude: "",
     createdAt: new Date().toISOString(),
   });
+  const { eventId } = useParams<{ eventId: string }>();
+
   const { geolocation, errorGeolocation, loadingGeolocation } =
     useGeolocation(getLocalization);
   const createBoulderMutation = useAddBoulder();
@@ -78,6 +81,7 @@ export default function BoulderForm({ boulder }: { boulder?: IBoulder }) {
     }
     const formattedData = {
       ...formData,
+      eventId: parseFloat(eventId!),
       latitude: lat,
       longitude: long,
     };
