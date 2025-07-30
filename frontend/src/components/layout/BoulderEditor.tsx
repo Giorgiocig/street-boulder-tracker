@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import BoulderForm from "./BoulderForm";
 import BouldersViewer from "./BouldersViewer";
