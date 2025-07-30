@@ -66,3 +66,7 @@ export interface IEventCard {
   date: string;
   city: string;
 }
+
+export interface EventCardProps extends IEventForm {
+  handleClickEvent: (event: number) => void;
+}
