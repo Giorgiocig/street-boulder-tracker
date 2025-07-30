@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addEvent, deleteEvent, updateEvent } from "../eventApi";
-import type { IEventForm } from "../../../../utilities";
+import type { IEventForm } from "../../../utilities";
 
 export const useAddEvent = () => {
   const queryClient = useQueryClient();
