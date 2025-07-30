@@ -1,8 +1,8 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import type { IEventForm } from "../../utilities";
-import { CardActions, IconButton, Stack } from "@mui/material";
+import type { EventCardProps } from "../../utilities";
+import { Button, CardActions, IconButton, Stack } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDeleteEvent } from "../../services";
@@ -11,7 +11,10 @@ import { useState } from "react";
 import EventForm from "../layout/EventForm";
 import FullScreenDialog from "./FullScreenDialog";
 
-export default function EventCard(event: IEventForm) {
+export default function EventCard({
+  handleClickEvent,
+  ...event
+}: EventCardProps) {
   const deleteEventMutation = useDeleteEvent();
   const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false);
   const [isOpenFullScreenDialog, setIsOpenFullScreenDialog] = useState(false);
@@ -39,6 +42,15 @@ export default function EventCard(event: IEventForm) {
         justifyContent: "space-between",
       }}
     >
+      <Button
+        onClick={() => {
+          if (event.id !== undefined) {
+            handleClickEvent(event.id);
+          }
+        }}
+      >
+        Click per l mostrare i boulders
+      </Button>
       <CardContent>
         <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
           {event.name}
