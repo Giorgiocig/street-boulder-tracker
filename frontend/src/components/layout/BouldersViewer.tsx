@@ -1,15 +1,17 @@
 import { Grid } from "@mui/material";
-import { useGetBoulders } from "../../services";
+import { useGetEventWithBoulders } from "../../services";
 import BoulderCardViewer from "../common/BoulderCardViewer";
 import LeafletBouldersViewer from "../common/LeafletBouldersViewer";
 import { useState } from "react";
+import { useParams } from "react-router";
 
 export default function BouldersViewer() {
   const [latLng, setLatLng] = useState<
     [latitude: number, longitude: number] | null
   >(null);
 
-  const response = useGetBoulders();
+  const { eventId } = useParams();
+  const response = useGetEventWithBoulders(Number(eventId));
   const boulders = response.data;
 
   return (
