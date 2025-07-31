@@ -44,9 +44,7 @@ export default function EventCard({
     >
       <Button
         onClick={() => {
-          if (event.id !== undefined) {
-            handleClickEvent(event.id);
-          }
+          handleClickEvent(event.id!);
         }}
       >
         Click per l mostrare i boulders
