@@ -1,4 +1,4 @@
-import { Button, Snackbar, TextField, Typography } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { AutocompleteCity } from "../form/AutocompleteCity";
 import PublishIcon from "@mui/icons-material/Publish";
@@ -158,7 +158,6 @@ export default function EventForm({
       >
         Inserisci evento
       </Button>
-      <Snackbar />
     </form>
   );
 }
