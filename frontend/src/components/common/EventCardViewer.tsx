@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useGetEvents } from "../../services";
 import EventCard from "./EventCard";
 import type { IEventCard, IEventForm } from "../../utilities";
@@ -14,15 +14,17 @@ export default function EventCardViewer() {
   };
 
   return (
-    <Box>
+    <Grid container spacing={2}>
       {data &&
         data.map((event: IEventCard) => (
-          <EventCard
-            key={event.id}
-            {...(event as IEventForm)}
-            handleClickEvent={handleClickEvent}
-          />
+          <Grid size={6} key={event.id}>
+            <EventCard
+              key={event.id}
+              {...(event as IEventForm)}
+              handleClickEvent={handleClickEvent}
+            />
+          </Grid>
         ))}
-    </Box>
+    </Grid>
   );
 }
