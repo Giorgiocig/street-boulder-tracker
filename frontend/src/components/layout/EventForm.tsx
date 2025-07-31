@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, Snackbar, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { AutocompleteCity } from "../form/AutocompleteCity";
 import PublishIcon from "@mui/icons-material/Publish";
@@ -15,7 +15,13 @@ import { useAddEvent, useUpdateEvent } from "../../services";
 
 export type EventFormValues = z.infer<typeof EventSchema>;
 
-export default function EventForm({ event }: { event?: IEventForm }) {
+export default function EventForm({
+  event,
+  setToggle,
+}: {
+  event?: IEventForm;
+  setToggle: () => void;
+}) {
   // states
   const [cityValue, setCityValue] = useState("");
   const [latLong, setLatLong] = useState<[number, number] | null>(null);
@@ -94,6 +100,7 @@ export default function EventForm({ event }: { event?: IEventForm }) {
       };
       console.log("Update evento:", updatePayload);
       updateEventMutation.mutate({ id: event.id, data: updatePayload });
+      setToggle();
     } else {
       const createPayload = {
         ...data,
@@ -103,6 +110,7 @@ export default function EventForm({ event }: { event?: IEventForm }) {
       };
       console.log("Crea evento:", createPayload);
       createEventMutation.mutate(createPayload);
+      setToggle();
     }
   };
 
@@ -150,6 +158,7 @@ export default function EventForm({ event }: { event?: IEventForm }) {
       >
         Inserisci evento
       </Button>
+      <Snackbar />
     </form>
   );
 }
