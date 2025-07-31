@@ -21,7 +21,10 @@ export const useAddBoulder = () => {
     // on Settled --> end  mutation
     onSettled: async (_, error) => {
       if (error) console.log(error);
-      else await queryClient.invalidateQueries({ queryKey: ["boulders"] });
+      else
+        await queryClient.invalidateQueries({
+          queryKey: ["events"],
+        });
     },
   });
 };
@@ -32,7 +35,7 @@ export const useDeleteBoulder = () => {
     mutationFn: (id: number) => deleteBoulder(id),
     onSettled: async (_, error) => {
       if (error) console.log(error);
-      else await queryClient.invalidateQueries({ queryKey: ["boulders"] });
+      else await queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
 };
@@ -44,7 +47,10 @@ export const useUpdateBoulder = () => {
       updateBoulder(id, data),
     onSettled: async (_, error) => {
       if (error) console.log(error);
-      else await queryClient.invalidateQueries({ queryKey: ["boulders"] });
+      else
+        await queryClient.invalidateQueries({
+          queryKey: ["events"],
+        });
     },
   });
 };
