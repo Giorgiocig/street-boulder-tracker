@@ -25,7 +25,7 @@ export default function EventEditor() {
         isOpen={value}
         titleText="Evento Editor - Inserisci Evento"
       >
-        <EventForm />
+        <EventForm setToggle={setToggle} />
       </FullScreenDialog>
     </Box>
   );
