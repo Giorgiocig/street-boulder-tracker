@@ -3,13 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import type { EventCardProps } from "../../utilities";
 import StartIcon from "@mui/icons-material/Start";
-import {
-  Button,
-  CardActionArea,
-  CardActions,
-  IconButton,
-  Stack,
-} from "@mui/material";
+import { Button, CardActions, IconButton, Stack } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDeleteEvent } from "../../services";
@@ -17,6 +11,7 @@ import AlertDialog from "./AlertDialog";
 import { useState } from "react";
 import EventForm from "../layout/EventForm";
 import FullScreenDialog from "./FullScreenDialog";
+import { useToggle } from "../../customHooks/useToggle";
 
 export default function EventCard({
   handleClickEvent,
@@ -24,8 +19,7 @@ export default function EventCard({
 }: EventCardProps) {
   const deleteEventMutation = useDeleteEvent();
   const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false);
-  const [isOpenFullScreenDialog, setIsOpenFullScreenDialog] = useState(false);
-
+  const [value, setToggle] = useToggle(false);
   const handleClickDelete = () => {
     setIsOpenAlertDialog(true);
   };
@@ -37,11 +31,6 @@ export default function EventCard({
       console.error("ID del event non valido:", event.id);
     }
   };
-
-  const handleClickEdit = () => {
-    setIsOpenFullScreenDialog(true);
-  };
-
   return (
     <Card
       sx={{
@@ -77,7 +66,7 @@ export default function EventCard({
           </IconButton>
           <IconButton
             aria-label="edit"
-            onClick={handleClickEdit}
+            onClick={setToggle}
             color="secondary"
             sx={{ width: "3rem" }}
           >
@@ -95,11 +84,11 @@ export default function EventCard({
         </Stack>
       </CardActions>
       <FullScreenDialog
-        setIsOpen={setIsOpenFullScreenDialog}
-        isOpen={isOpenFullScreenDialog}
+        setIsOpen={setToggle}
+        isOpen={value}
         titleText="Event Editor - Modifica Evento"
       >
-        <EventForm event={event} />
+        <EventForm event={event} setToggle={setToggle} />
       </FullScreenDialog>
       <AlertDialog
         open={isOpenAlertDialog}
@@ -108,7 +97,6 @@ export default function EventCard({
         entityName={event.name}
         entityTitle="evento"
       />
-      {isOpenFullScreenDialog && <EventForm event={event} />}
     </Card>
   );
 }
