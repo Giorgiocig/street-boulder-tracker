@@ -16,8 +16,8 @@ export default function BoulderCardViewer({
       </Typography>
       <Grid container spacing={2}>
         {boulders?.map((boulder, idx) => (
-          <Grid size={4}>
-            <BasicCard boulder={boulder} setLatLng={setLatLng} key={idx} />
+          <Grid size={4} key={idx}>
+            <BasicCard boulder={boulder} setLatLng={setLatLng} />
           </Grid>
         ))}
       </Grid>
