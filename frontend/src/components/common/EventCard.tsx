@@ -2,7 +2,14 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import type { EventCardProps } from "../../utilities";
-import { Button, CardActions, IconButton, Stack } from "@mui/material";
+import StartIcon from "@mui/icons-material/Start";
+import {
+  Button,
+  CardActionArea,
+  CardActions,
+  IconButton,
+  Stack,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDeleteEvent } from "../../services";
@@ -42,30 +49,29 @@ export default function EventCard({
         justifyContent: "space-between",
       }}
     >
-      <Button
-        onClick={() => {
-          handleClickEvent(event.id!);
-        }}
-      >
-        Click per l mostrare i boulders
-      </Button>
       <CardContent>
-        <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
-          {event.name}
+        <Typography gutterBottom sx={{ fontSize: 18, fontWeight: "bold" }}>
+          Nome evento : {event.name}
         </Typography>
-        <Typography variant="body2">{event.city}</Typography>
+        <Typography
+          variant="body2"
+          sx={{ fontSize: 16, padding: "1rem  0 1rem 0 " }}
+        >
+          Luogo : {event.city}
+        </Typography>
         <Typography variant="h5" component="div"></Typography>
-        <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-          {event.description}
+        <Typography sx={{ pb: 1.5 }}>
+          Descrizione : {event.description}
         </Typography>
         <Typography variant="body2">{event.date}</Typography>
       </CardContent>
       <CardActions>
-        <Stack sx={{ gap: 2 }}>
+        <Stack sx={{ gap: 2, alignItems: "center" }}>
           <IconButton
             aria-label="delete"
             onClick={handleClickDelete}
             color="secondary"
+            sx={{ width: "3rem" }}
           >
             <DeleteIcon />
           </IconButton>
@@ -73,9 +79,19 @@ export default function EventCard({
             aria-label="edit"
             onClick={handleClickEdit}
             color="secondary"
+            sx={{ width: "3rem" }}
           >
             <EditIcon />
           </IconButton>
+          <Button
+            endIcon={<StartIcon />}
+            size="large"
+            onClick={() => {
+              handleClickEvent(event.id!);
+            }}
+          >
+            Vai ai boulders
+          </Button>
         </Stack>
       </CardActions>
       <FullScreenDialog
