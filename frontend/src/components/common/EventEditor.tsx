@@ -8,13 +8,16 @@ export default function EventEditor() {
   const [value, setToggle] = useToggle(false);
 
   return (
-    <Box>
+    <Box sx={{ "max-width": "1280px", margin: " 0 auto", minHeight: "84.3vh" }}>
       <Button
+        variant="contained"
+        size="large"
         onClick={() => {
           setToggle(true);
         }}
+        sx={{ marginBottom: "2rem" }}
       >
-        Add Event
+        Aggiungi Evento
       </Button>
       <EventCardViewer />
       <FullScreenDialog
