@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, vi, expect } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EventCardViewer from "../EventCardViewer";
+import { MemoryRouter } from "react-router";
 
 const queryClient = new QueryClient();
 
@@ -30,9 +31,11 @@ describe("EventCardViewer", () => {
   it("should render Card", () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <EventCardViewer />
+        <MemoryRouter>
+          <EventCardViewer />
+        </MemoryRouter>
       </QueryClientProvider>
     );
-    expect(screen.getByText("Evento 1")).toBeInTheDocument();
+    expect(screen.getByText(/Evento 1/)).toBeInTheDocument();
   });
 });

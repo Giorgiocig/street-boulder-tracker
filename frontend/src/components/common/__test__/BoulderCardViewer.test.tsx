@@ -3,6 +3,7 @@ import { describe, it, vi, expect } from "vitest";
 import BoulderCardViewer from "../../common/BoulderCardViewer";
 import { type Difficulty } from "../../../utilities";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SnackbarProvider } from "../../../contexts/SnackbarContext";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,9 @@ describe("BoulderCardViewer", () => {
     ];
     render(
       <QueryClientProvider client={queryClient}>
-        <BoulderCardViewer boulders={boulders} setLatLng={setLatLngMock} />
+        <SnackbarProvider>
+          <BoulderCardViewer boulders={boulders} setLatLng={setLatLngMock} />
+        </SnackbarProvider>
       </QueryClientProvider>
     );
     expect(screen.getByText("Boulder 1")).toBeInTheDocument();

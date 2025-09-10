@@ -5,6 +5,7 @@ import EventForm from "../EventForm";
 import { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SnackbarProvider } from "../../../contexts/SnackbarContext";
 const queryClient = new QueryClient();
 // Mock the useAddEvent hook
 const mutateMock = vi.fn();
@@ -105,9 +106,12 @@ describe("EventForm", () => {
   }); */
 
   it("handles form validation errors", async () => {
+    const toggleMock = vi.fn();
     render(
       <QueryClientProvider client={queryClient}>
-        <EventForm />
+        <SnackbarProvider>
+          <EventForm setToggle={toggleMock} />
+        </SnackbarProvider>
       </QueryClientProvider>
     );
     const user = userEvent.setup();

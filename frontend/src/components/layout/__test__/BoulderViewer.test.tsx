@@ -3,43 +3,66 @@ import userEvent from "@testing-library/user-event";
 
 import BouldersViewer from "../BouldersViewer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MemoryRouter, Route, Routes } from "react-router";
 
 const queryClient = new QueryClient();
 
-vi.mock("../../../services", () => ({
-  useGetBoulders: () => ({
-    data: [
-      {
-        id: 1,
-        latitude: 41.9,
-        longitude: 12.5,
-        name: "Boulder 1",
-        description: "Descrizione 1",
-        difficulty: "facile",
-        createdAt: "2023-01-01T00:00:00.000Z",
-      },
-    ],
-  }),
-}));
+vi.mock("../../../services", () => {
+  return {
+    useGetBoulders: () => ({
+      data: [
+        {
+          id: 1,
+          latitude: 41.9,
+          longitude: 12.5,
+          name: "Boulder 1",
+          description: "Descrizione 1",
+          difficulty: "facile",
+          createdAt: "2023-01-01T00:00:00.000Z",
+        },
+      ],
+    }),
 
+    useGetEventWithBoulders: vi.fn(() => ({
+      data: {
+        id: 1,
+        name: "Evento 1",
+        boulders: [
+          {
+            id: 1,
+            latitude: 41.9,
+            longitude: 12.5,
+            name: "Boulder 1",
+          },
+        ],
+      },
+      isLoading: false,
+      error: null,
+    })),
+  };
+});
+
+// Mock di LeafletBouldersViewer
 vi.mock("../../common/LeafletBouldersViewer", () => ({
-  default: ({ latLng }: { latLng: [number, number] | null }) => (
+  default: ({ latLng }: { boulders: any; latLng: [number, number] | null }) => (
     <div data-testid="leaflet" data-lat={latLng?.[0]} data-lng={latLng?.[1]}>
       Leaflet Map
     </div>
   ),
 }));
 
+// Mock di BoulderCardViewer
 vi.mock("../../common/BoulderCardViewer", () => ({
   default: ({
     boulders,
     setLatLng,
   }: {
-    boulders: any[];
+    boulders?: any;
     setLatLng: Function;
   }) => (
     <>
-      {boulders.map((b) => (
+      {/* Verifica che boulders esista e abbia la proprietà boulders */}
+      {boulders?.boulders?.map((b: any) => (
         <button
           key={b.id}
           onClick={() => setLatLng([b.latitude, b.longitude])}
@@ -57,7 +80,11 @@ test("aggiorna latLng su click e passa la nuova posizione a LeafletBouldersViewe
 
   render(
     <QueryClientProvider client={queryClient}>
-      <BouldersViewer />
+      <MemoryRouter initialEntries={["/boulders/1"]}>
+        <Routes>
+          <Route path="/boulders/:eventId" element={<BouldersViewer />} />
+        </Routes>
+      </MemoryRouter>
     </QueryClientProvider>
   );
 

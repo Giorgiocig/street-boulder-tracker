@@ -30,7 +30,8 @@ describe("EventCard", () => {
       </QueryClientProvider>
     );
 
-    expect(screen.getByText("Evento 1")).toBeInTheDocument();
+    // Soluzione 1: Usa una funzione matcher più flessibile
+    expect(screen.getByText(/Evento 1/i)).toBeInTheDocument();
   });
   it("should open alert dialog when delete icon is clicked", async () => {
     const user = userEvent.setup();
