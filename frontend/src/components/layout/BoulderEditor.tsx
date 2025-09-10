@@ -3,6 +3,7 @@ import BoulderForm from "./BoulderForm";
 import BouldersViewer from "./BouldersViewer";
 import FullScreenDialog from "../common/FullScreenDialog";
 import { useToggle } from "../../customHooks/useToggle";
+import PositionedSnackbar from "../common/Snackbar";
 
 export default function BoulderEditor() {
   const [value, setToggle] = useToggle(false);
@@ -19,6 +20,7 @@ export default function BoulderEditor() {
         <BoulderForm />
       </FullScreenDialog>
       <BouldersViewer />
+      <PositionedSnackbar />
     </Box>
   );
 }
