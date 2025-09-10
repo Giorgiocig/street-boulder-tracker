@@ -3,13 +3,11 @@ import FullScreenDialog from "./FullScreenDialog";
 import EventForm from "../layout/EventForm";
 import { useToggle } from "../../customHooks/useToggle";
 import EventCardViewer from "./EventCardViewer";
-import PositionedSnackbar from "../form/Snackbar";
-import { useState } from "react";
+import PositionedSnackbar from "./Snackbar";
 
 export default function EventEditor() {
   const [value, setToggle] = useToggle(false);
-  const [valueSnackbar, setToggleSnackbar] = useToggle(true);
-  const [messageSnackbar, setMessageSnackbar] = useState<string>("");
+
   return (
     <Box sx={{ "max-width": "1280px", margin: " 0 auto", minHeight: "84.3vh" }}>
       <Button
@@ -30,10 +28,7 @@ export default function EventEditor() {
       >
         <EventForm setToggle={setToggle} />
       </FullScreenDialog>
-      <PositionedSnackbar
-        open={valueSnackbar}
-        messageSnackbar={messageSnackbar}
-      />
+      <PositionedSnackbar />
     </Box>
   );
 }
