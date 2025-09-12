@@ -8,10 +8,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDeleteEvent } from "../../services";
 import AlertDialog from "./AlertDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EventForm from "../layout/EventForm";
 import FullScreenDialog from "./FullScreenDialog";
 import { useToggle } from "../../customHooks/useToggle";
+import { useLatLong } from "../../customHooks/useLatLong";
 
 export default function EventCard({
   handleClickEvent,
@@ -23,6 +24,14 @@ export default function EventCard({
   const handleClickDelete = () => {
     setIsOpenAlertDialog(true);
   };
+  //context
+
+  const { latLongCtx, setLatLongCtx } = useLatLong();
+  useEffect(() => {
+    if (event.latitude && event.longitude) {
+      setLatLongCtx([event.latitude, event.longitude]);
+    }
+  }, []);
 
   const handleDelete = async () => {
     if (typeof event.id === "number")
