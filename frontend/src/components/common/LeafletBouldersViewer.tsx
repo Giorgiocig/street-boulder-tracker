@@ -2,8 +2,9 @@ import { Box, Typography } from "@mui/material";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 import { getDivIcon } from "../../utilities/helpers";
-import { COLOR_MAP, type IBoulder } from "../../utilities";
+import { COLOR_MAP, DEFAULT_LAT_LONG, type IBoulder } from "../../utilities";
 import { RecenterMap } from "./RecenterMap";
+import { useLatLong } from "../../customHooks/useLatLong";
 
 export default function LeafletBouldersViewer({
   boulders,
@@ -12,13 +13,17 @@ export default function LeafletBouldersViewer({
   boulders: IBoulder[] | undefined;
   latLng: [latitude: number, longitude: number] | null;
 }) {
+  const { latLongCtx } = useLatLong();
   const lastBoulder = boulders && boulders.slice(-1)[0];
-  if (!lastBoulder) return <Typography>Caricamento mppa...</Typography>;
+  let coordinateForCentering: [number, number] = lastBoulder
+    ? [lastBoulder.latitude, lastBoulder.longitude]
+    : latLongCtx ?? DEFAULT_LAT_LONG; // fallback
 
   return (
     <Box style={{ height: "450px", width: "100%", marginTop: "2rem" }}>
       <MapContainer
-        center={[lastBoulder.latitude, lastBoulder.longitude]}
+        key={coordinateForCentering?.join(",")}
+        center={coordinateForCentering}
         zoom={12}
         style={{ height: "100%", width: "100%" }}
       >
