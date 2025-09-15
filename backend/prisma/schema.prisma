@@ -53,18 +53,19 @@ model Boulder{
   eventId Int
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  photos Photo[]
+  images Image[]
   @@map("boulders")
 }
 
-model Photo {
+model Image {
   id         Int      @id @default(autoincrement())
   url        String
+  public_id  String
   uploadedAt DateTime @default(now())
 
   boulderId  Int
   boulder    Boulder  @relation(fields: [boulderId], references: [id], onDelete:Cascade)
-  @@map("photos")
+  @@map("image")
 }
 
 enum Difficulty {
