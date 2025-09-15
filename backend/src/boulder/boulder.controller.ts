@@ -7,14 +7,21 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { BoulderService } from './boulder.service';
 import { BoulderDto } from './dto';
 import { UpdateBoulderDto } from './dto/update-boulder.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Controller('v1/boulders')
 export class BoulderController {
-  constructor(private readonly boulderService: BoulderService) {}
+  constructor(
+    private readonly boulderService: BoulderService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Post('/add')
   async addBoulder(@Body() dto: BoulderDto): Promise<any> {
@@ -42,5 +49,15 @@ export class BoulderController {
   @Delete(':id')
   async deleteBoulder(@Param('id', ParseIntPipe) id: number): Promise<any> {
     return await this.boulderService.deleteBoulder(id);
+  }
+
+  @Post(':id/image')
+  @UseInterceptors(FileInterceptor('file', { storage: undefined })) // memory storage default
+  async uploadImage(
+    @Param('id') boulderId: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    // file.buffer contains image data
+    return this.cloudinaryService.uploadImage(file.buffer, Number(boulderId));
   }
 }
