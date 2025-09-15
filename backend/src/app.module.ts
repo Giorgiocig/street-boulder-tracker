@@ -5,9 +5,16 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { BoulderModule } from './boulder/boulder.module';
 import { EventModule } from './event/event.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
-  imports: [PrismaModule, ConfigModule.forRoot({ isGlobal: true }), BoulderModule, EventModule],
+  imports: [
+    PrismaModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    BoulderModule,
+    EventModule,
+    CloudinaryModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
