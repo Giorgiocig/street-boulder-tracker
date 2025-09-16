@@ -52,9 +52,9 @@ export class BoulderController {
   }
 
   @Post(':id/image')
-  @UseInterceptors(FileInterceptor('file', { storage: undefined })) // memory storage default
+  @UseInterceptors(FileInterceptor('file')) // memory storage default
   async uploadImage(
-    @Param('id') boulderId: number,
+    @Param('id', ParseIntPipe) boulderId: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
     // file.buffer contains image data
