@@ -18,6 +18,13 @@ export class CloudinaryService {
   }
   async uploadImage(fileBuffer: Buffer, boulderId: number) {
     try {
+      const boulder = await this.prisma.boulder.findUnique({
+        where: { id: boulderId },
+      });
+
+      if (!boulder) {
+        throw new Error(`Boulder with id ${boulderId} not found`);
+      }
       // Promise is required because Cloudinary API doesn t return a promise.
       const result = await new Promise<any>((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
