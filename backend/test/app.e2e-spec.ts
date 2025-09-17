@@ -22,9 +22,9 @@ describe('App e2e', () => {
 
     prisma = new PrismaClient();
 
-    // clean up event boulder (child of event)
+    // clean up (clean child then parents)
+    await prisma.image.deleteMany();
     await prisma.boulder.deleteMany();
-    // clean up boulder
     await prisma.event.deleteMany();
   });
 
@@ -251,6 +251,39 @@ describe('App e2e', () => {
           .withPathParams('id', eventId)
           .expectStatus(200)
           .expectJsonLength('', 1);
+      });
+    });
+    describe('uploadImage', () => {
+      it('should upload an image', async () => {
+        const uniqueName = `evento-${Date.now()}`;
+        const eventId = await pactum
+          .spec()
+          .post('http://localhost:3000/v1/events/add')
+          .withBody({ ...eventBodyRequestFixture, name: uniqueName })
+          .expectStatus(201)
+          .returns('id');
+
+        const response = await pactum
+          .spec()
+          .post('http://localhost:3000/v1/boulders/add')
+          .withBody({
+            ...boulderDtoFixture,
+            eventId,
+          })
+          .expectStatus(201);
+
+        const boulderId = response.body.id;
+
+        const uploadResponse = await pactum
+          .spec()
+          .post(`http://localhost:3000/v1/boulders/${boulderId}/image`)
+          .withFile(
+            'file',
+            'D:/coding on disk D/street-boulder-tracker/backend/src/cloudinary/test.utilities/testimage.jpeg',
+          )
+          .expectStatus(201);
+
+        return uploadResponse;
       });
     });
   });
