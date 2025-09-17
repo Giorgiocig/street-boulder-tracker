@@ -5,6 +5,10 @@ import { ConfigService } from '@nestjs/config';
 import { createBaseDto } from 'src/boulder/fixture';
 import { v2 as cloudinary } from 'cloudinary';
 import { cloudinaryConfigTest, imageResultFixture } from './test.utilities';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
 describe('CloudinaryService', () => {
   let service: CloudinaryService;
@@ -17,6 +21,7 @@ describe('CloudinaryService', () => {
     },
     image: {
       create: jest.fn(),
+      findMany: jest.fn(),
     },
   };
 
@@ -114,8 +119,8 @@ describe('CloudinaryService', () => {
       // Mock not found boulder
       mockPrismaService.boulder.findUnique.mockResolvedValue(null);
       const fileBuffer = Buffer.from('mock image data');
-      await expect(service.uploadImage(fileBuffer, 999)).rejects.toThrow(
-        'Failed to create boulder',
+      await expect(service.uploadImage(fileBuffer, 999)).rejects.toBeInstanceOf(
+        NotFoundException,
       );
 
       expect(mockPrismaService.boulder.findUnique).toHaveBeenCalledWith({
@@ -147,8 +152,33 @@ describe('CloudinaryService', () => {
 
       const fileBuffer = Buffer.from('mock image data');
 
-      await expect(service.uploadImage(fileBuffer, 1)).rejects.toThrow(
-        'Failed to create boulder',
+      await expect(service.uploadImage(fileBuffer, 1)).rejects.toBeInstanceOf(
+        InternalServerErrorException,
+      );
+    });
+  });
+  describe('getImages', () => {
+    it('should get one image', async () => {
+      const mockBoulder = createBaseDto();
+      mockPrismaService.boulder.findUnique.mockResolvedValue(mockBoulder);
+      mockPrismaService.image.findMany.mockResolvedValue([imageResultFixture]);
+      const image = await service.getImages(1);
+      expect(image[0].url).toBe(
+        'https://res.cloudinary.com/ddcyifrfx/image/upload/v1758014220/boulders/vxvqxoyfc1lpyuacjfhg.jpg',
+      );
+    });
+    it('should return empty array if no images', async () => {
+      const mockBoulder = createBaseDto();
+      mockPrismaService.boulder.findUnique.mockResolvedValue(mockBoulder);
+      mockPrismaService.image.findMany.mockResolvedValue([]);
+      const image = await service.getImages(1);
+      expect(image).toEqual([]);
+    });
+    it('should throw NotFoundException if boulder not found', async () => {
+      mockPrismaService.boulder.findUnique.mockResolvedValue(null);
+
+      await expect(service.getImages(999)).rejects.toThrowError(
+        NotFoundException,
       );
     });
   });
