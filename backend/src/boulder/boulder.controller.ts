@@ -51,6 +51,7 @@ export class BoulderController {
     return await this.boulderService.deleteBoulder(id);
   }
 
+  //image
   @Post(':id/image')
   @UseInterceptors(FileInterceptor('file')) // memory storage default
   async uploadImage(
@@ -59,5 +60,12 @@ export class BoulderController {
   ) {
     // file.buffer contains image data
     return this.cloudinaryService.uploadImage(file.buffer, Number(boulderId));
+  }
+
+  // image
+  @Get(':id/images') async getImage(
+    @Param('id', ParseIntPipe) boulderId: number,
+  ) {
+    return this.cloudinaryService.getImages(boulderId);
   }
 }
