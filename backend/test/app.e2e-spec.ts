@@ -255,7 +255,7 @@ describe('App e2e', () => {
     });
     describe('uploadImage', () => {
       it('should upload an image', async () => {
-        const uniqueName = `evento-${Date.now()}`;
+        const uniqueName = `event-${Date.now()}`;
         const eventId = await pactum
           .spec()
           .post('http://localhost:3000/v1/events/add')
@@ -274,7 +274,7 @@ describe('App e2e', () => {
 
         const boulderId = response.body.id;
 
-        const uploadResponse = await pactum
+        return await pactum
           .spec()
           .post(`http://localhost:3000/v1/boulders/${boulderId}/image`)
           .withFile(
@@ -282,8 +282,41 @@ describe('App e2e', () => {
             'D:/coding on disk D/street-boulder-tracker/backend/src/cloudinary/test.utilities/testimage.jpeg',
           )
           .expectStatus(201);
+      });
+    });
+    describe('getImages', () => {
+      it('should get all the images', async () => {
+        const uniqueName = `event-${Date.now()}`;
+        const eventId = await pactum
+          .spec()
+          .post('http://localhost:3000/v1/events/add')
+          .withBody({ ...eventBodyRequestFixture, name: uniqueName })
+          .expectStatus(201)
+          .returns('id');
 
-        return uploadResponse;
+        const response = await pactum
+          .spec()
+          .post('http://localhost:3000/v1/boulders/add')
+          .withBody({
+            ...boulderDtoFixture,
+            eventId,
+          })
+          .expectStatus(201);
+
+        const boulderId = response.body.id;
+
+        await pactum
+          .spec()
+          .post(`http://localhost:3000/v1/boulders/${boulderId}/image`)
+          .withFile(
+            'file',
+            'D:/coding on disk D/street-boulder-tracker/backend/src/cloudinary/test.utilities/testimage.jpeg',
+          );
+        await pactum
+          .spec()
+          .get(`http://localhost:3000/v1/boulders/${boulderId}/images`)
+          .expectStatus(200)
+          .expectJsonLength('', 1);
       });
     });
   });
