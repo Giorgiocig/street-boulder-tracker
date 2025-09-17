@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 as cloudinary } from 'cloudinary';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -48,7 +53,28 @@ export class CloudinaryService {
       });
     } catch (error) {
       console.error(error);
-      throw new Error('Failed to create boulder', error);
+      throw new Error('Failed to upload image', error);
+    }
+  }
+  async getImages(boulderId: number) {
+    try {
+      const boulder = await this.prisma.boulder.findUnique({
+        where: { id: boulderId },
+      });
+      if (!boulder) {
+        throw new NotFoundException(`Boulder with id ${boulderId} not found`);
+      }
+      // return images
+      return await this.prisma.image.findMany({
+        where: { boulderId },
+      });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        `Failed to get images: ${error.message}`,
+      );
     }
   }
 }
