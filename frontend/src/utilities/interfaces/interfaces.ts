@@ -15,6 +15,7 @@ export interface IBoulder {
   longitude: number;
   createdAt: string;
   user?: any;
+  boulderImage: any;
 }
 
 export interface IFormFieldsContainerProps {
@@ -28,6 +29,7 @@ export interface IBoulderForm {
   latitude: string;
   longitude: string;
   createdAt: string;
+  boulderImage: File | string;
 }
 
 export interface IEventForm {
@@ -69,4 +71,10 @@ export interface IEventCard {
 
 export interface EventCardProps extends IEventForm {
   handleClickEvent: (event: number) => void;
+}
+
+export interface IBoulderImage {
+  url: string;
+  public_id: string;
+  boulderId: number;
 }
