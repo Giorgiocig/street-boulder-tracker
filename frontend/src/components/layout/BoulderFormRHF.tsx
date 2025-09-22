@@ -11,6 +11,8 @@ import { DIFFICULTY_SELECT_MENU_ITEMS, type IBoulder } from "../../utilities";
 import { useGeolocation } from "../../customHooks/useLocalization";
 import LeafletMapViewer from "../common/LeafletMapViewer";
 import { useEffect, useState } from "react";
+import { CustomNumberInput } from "../form/NumberInput";
+import { NumberInputRHF } from "../form/NumberInputRHF";
 export type BoulderSchemaValues = z.infer<typeof BoulderSchema>;
 
 type latlng = {
@@ -37,6 +39,7 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
       name: "",
       description: "",
       difficulty: "facile",
+      latitude: 0,
     },
   });
 
@@ -67,7 +70,7 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
     createBoulderMutation.mutate(data);
     console.log(data);
   };
-  console.log(latLng);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <TextField
@@ -97,8 +100,12 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
         control={control}
         menuItems={DIFFICULTY_SELECT_MENU_ITEMS}
       />
-      {/** Two textfield one for latitude and for longitude */}
-      <TextField />
+      {/** Latitudine e longitudine in numbers */}
+      <NumberInputRHF
+        name={"latitude"}
+        control={control}
+        label={"latitudine"}
+      />
       <TextField />
       <Button
         sx={{
