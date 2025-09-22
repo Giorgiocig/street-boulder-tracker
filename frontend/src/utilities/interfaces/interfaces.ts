@@ -1,9 +1,13 @@
+import type { Control, FieldError, FieldErrors } from "react-hook-form";
 import type { Difficulty, FieldType } from "../types";
 
 export interface ISelectForm {
+  name: string;
   menuItems: string[];
-  setFormData: React.Dispatch<React.SetStateAction<IBoulderForm>>;
-  value: string;
+  label?: string;
+  required?: boolean;
+  control: Control<any>;
+  errors?: FieldErrors<any>;
 }
 
 export interface IBoulder {
@@ -15,7 +19,6 @@ export interface IBoulder {
   longitude: number;
   createdAt: string;
   user?: any;
-  boulderImage: any;
 }
 
 export interface IFormFieldsContainerProps {
@@ -45,7 +48,7 @@ export interface IEventForm {
 
 export interface ILeafletMapViewerProps {
   latLong: [number, number] | null;
-  setFormData: React.Dispatch<React.SetStateAction<IBoulderForm>>;
+  setFormData: any;
   name: string;
 }
 
@@ -77,4 +80,10 @@ export interface IBoulderImage {
   url: string;
   public_id: string;
   boulderId: number;
+}
+
+export interface CustomNumberInputProps {
+  name: string;
+  control: Control<any>;
+  label?: string;
 }
