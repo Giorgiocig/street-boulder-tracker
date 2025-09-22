@@ -8,4 +8,5 @@ export const BoulderSchema = z.object({
   difficulty: z.enum(DIFFICULTY_SELECT_MENU_ITEMS, {
     error: "La difficoltà è obbligatoria.",
   }),
+  latitude: z.number().min(1, "latitudine è obbligatoria."),
 });
