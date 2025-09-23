@@ -39,6 +39,7 @@ export const NumberInputRHF: React.FC<CustomNumberInputProps> = ({
   name,
   control,
   label,
+  dataTestId,
 }) => {
   return (
     <Controller
@@ -48,7 +49,7 @@ export const NumberInputRHF: React.FC<CustomNumberInputProps> = ({
         <FormControl fullWidth error={!!error}>
           {label && <InputLabel shrink>{label}</InputLabel>}
           <StyledNumberInput
-            data-testid="latitude-input"
+            data-testid={dataTestId}
             value={value ?? ""}
             onChange={(_, val) => {
               onChange(val ?? 0);
