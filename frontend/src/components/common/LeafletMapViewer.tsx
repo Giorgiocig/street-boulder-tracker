@@ -1,29 +1,23 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { RecenterMap } from "./RecenterMap";
-import type {
-  IBoulderForm,
-  ILeafletMapViewerProps,
-} from "../../utilities/interfaces";
+import type { ILeafletMapViewerProps } from "../../utilities/interfaces";
 import { Box } from "@mui/material";
 
 export default function LeafletMapViewer({
   latLong,
-  setFormData,
+  setValue,
   name,
 }: ILeafletMapViewerProps) {
-  if (!latLong || isNaN(latLong[0]) || isNaN(latLong[1])) {
+  if (!latLong) {
     latLong = [41.9028, 12.4964];
   }
 
   const onDragEnd = (event: any) => {
     const marker = event.target;
     const latLng = marker.getLatLng();
-    setFormData((prev: IBoulderForm) => ({
-      ...prev,
-      latitude: latLng.lat.toString(),
-      longitude: latLng.lng.toString(),
-    }));
+    setValue("latitude", latLng.lat);
+    setValue("longitude", latLng.lng);
   };
 
   return (
