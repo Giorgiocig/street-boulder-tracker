@@ -1,8 +1,15 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import BoulderFormRHF from "../BoulderFormRHF";
-import { render, screen, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { useGeolocation } from "../../../customHooks/useLocalization";
 
 const queryClient = new QueryClient();
 const theme = createTheme();
@@ -14,10 +21,26 @@ vi.mock("../../../services", () => ({
   }),
 }));
 
+let mockGeolocation: { latitude: number; longitude: number } | null = null;
+let mockRefreshGeolocation = vi.fn();
+
+vi.mock("../../../customHooks/useLocalization", () => {
+  return {
+    useGeolocation: vi.fn(() => ({
+      geolocation: null,
+      errorGeolocation: null,
+      loadingGeolocation: false,
+      refreshGeolocation: mockRefreshGeolocation,
+    })),
+  };
+});
+
 describe("BoulderFormRHF", () => {
   beforeEach(() => {
     // Clear the mock before each test
     mutateMock.mockClear();
+    mockRefreshGeolocation.mockClear();
+    mockGeolocation = null;
   });
   describe("name textField", () => {
     it("should render name textField", () => {
@@ -136,9 +159,16 @@ describe("BoulderFormRHF", () => {
       </QueryClientProvider>
     );
     const user = userEvent.setup();
+    const latitudeInput = screen
+      .getByTestId("latitude-input")
+      .querySelector("input");
+    await user.clear(latitudeInput!);
     const submitButton = screen.getByRole("button", {
       name: /inserisci boulder/i,
     });
+    const latitudeNumberInput = screen.getByTestId("latitude-input");
+    await user.type(latitudeNumberInput!, "{selectall}{backspace}");
+
     await user.click(submitButton);
     const errorMsg = await screen.findByText(/latitudine è obbligatoria./i);
     expect(errorMsg).toBeInTheDocument();
@@ -156,7 +186,7 @@ describe("BoulderFormRHF", () => {
       expect(longitudeNumberInput).toBeInTheDocument();
     });
   });
-  it("should render errorText whether longitude textField is empty", async () => {
+  it("should render errorText when longitude textField is empty", async () => {
     render(
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
@@ -165,12 +195,36 @@ describe("BoulderFormRHF", () => {
       </QueryClientProvider>
     );
     const user = userEvent.setup();
+    const longitudeInput = screen
+      .getByTestId("longitude-input")
+      .querySelector("input");
+    await user.clear(longitudeInput!);
+
     const submitButton = screen.getByRole("button", {
       name: /inserisci boulder/i,
     });
     await user.click(submitButton);
+
     const errorMsg = await screen.findByText(/longitudine è obbligatoria./i);
     expect(errorMsg).toBeInTheDocument();
+  });
+});
+describe("localizzati button", () => {
+  it("should call refreshGeolocation when Localizzati button is clicked", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <BoulderFormRHF />
+        </ThemeProvider>
+      </QueryClientProvider>
+    );
+
+    const button = screen.getByRole("button", { name: /localizzati/i });
+    await user.click(button);
+
+    expect(mockRefreshGeolocation).toHaveBeenCalledTimes(1);
   });
 });
 it("should calls mutation with correct data", async () => {
@@ -181,16 +235,17 @@ it("should calls mutation with correct data", async () => {
       </ThemeProvider>
     </QueryClientProvider>
   );
-  const lat = 123123;
-  const lng = 123123;
   // user interactions
   const user = userEvent.setup();
   // input field
+  const latitudeInput = screen.getByTestId("latitude-input");
+  const longitudeInput = screen.getByTestId("longitude-input");
   const nameInput = screen.getByLabelText(/nome boulder/i);
   const descriptionInput = screen.getByLabelText("descrizione boulder");
   const select = screen.getByRole("combobox");
-  const latitudeInput = screen.getByTestId("latitude-input");
-  const longitudeInput = screen.getByTestId("longitude-input");
+  // selecting input field
+  const latInput = latitudeInput.querySelector("input")!;
+  const lngInput = longitudeInput.querySelector("input")!;
   // name
   await user.type(nameInput, "Boulder 1");
   // description
@@ -199,9 +254,11 @@ it("should calls mutation with correct data", async () => {
     name: /inserisci boulder/i,
   });
   // latitude
-  await user.type(latitudeInput, lat.toString());
-  //longitude
-  await user.type(longitudeInput, lng.toString());
+  await user.clear(latInput);
+  await user.type(latInput, "123123");
+  //longititude
+  await user.clear(lngInput);
+  await user.type(lngInput, "123123");
   // select
   await user.click(select);
   const listbox = await screen.findByRole("listbox");
