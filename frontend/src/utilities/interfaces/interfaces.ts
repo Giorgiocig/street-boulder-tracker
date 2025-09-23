@@ -86,4 +86,5 @@ export interface CustomNumberInputProps {
   name: string;
   control: Control<any>;
   label?: string;
+  dataTestId: string;
 }
