@@ -143,6 +143,35 @@ describe("BoulderFormRHF", () => {
     const errorMsg = await screen.findByText(/latitudine è obbligatoria./i);
     expect(errorMsg).toBeInTheDocument();
   });
+  describe("longitude textField", () => {
+    it("should render longitude textfield", () => {
+      render(
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <BoulderFormRHF />
+          </ThemeProvider>
+        </QueryClientProvider>
+      );
+      const longitudeNumberInput = screen.getByTestId("longitude-input");
+      expect(longitudeNumberInput).toBeInTheDocument();
+    });
+  });
+  it("should render errorText whether longitude textField is empty", async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <BoulderFormRHF />
+        </ThemeProvider>
+      </QueryClientProvider>
+    );
+    const user = userEvent.setup();
+    const submitButton = screen.getByRole("button", {
+      name: /inserisci boulder/i,
+    });
+    await user.click(submitButton);
+    const errorMsg = await screen.findByText(/longitudine è obbligatoria./i);
+    expect(errorMsg).toBeInTheDocument();
+  });
 });
 it("should calls mutation with correct data", async () => {
   render(
@@ -153,6 +182,7 @@ it("should calls mutation with correct data", async () => {
     </QueryClientProvider>
   );
   const lat = 123123;
+  const lng = 123123;
   // user interactions
   const user = userEvent.setup();
   // input field
@@ -160,6 +190,7 @@ it("should calls mutation with correct data", async () => {
   const descriptionInput = screen.getByLabelText("descrizione boulder");
   const select = screen.getByRole("combobox");
   const latitudeInput = screen.getByTestId("latitude-input");
+  const longitudeInput = screen.getByTestId("longitude-input");
   // name
   await user.type(nameInput, "Boulder 1");
   // description
@@ -169,6 +200,8 @@ it("should calls mutation with correct data", async () => {
   });
   // latitude
   await user.type(latitudeInput, lat.toString());
+  //longitude
+  await user.type(longitudeInput, lng.toString());
   // select
   await user.click(select);
   const listbox = await screen.findByRole("listbox");
@@ -184,6 +217,7 @@ it("should calls mutation with correct data", async () => {
       description: "Boulder description",
       difficulty: "medio",
       latitude: 123123,
+      longitude: 123123,
     })
   );
 });
