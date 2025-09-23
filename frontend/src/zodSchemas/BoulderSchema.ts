@@ -9,4 +9,5 @@ export const BoulderSchema = z.object({
     error: "La difficoltà è obbligatoria.",
   }),
   latitude: z.number().min(1, "latitudine è obbligatoria."),
+  longitude: z.number().min(1, "longitudine è obbligatoria."),
 });
