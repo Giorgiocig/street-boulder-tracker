@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { LocalizationType } from "../utilities/types";
 
-export function useGeolocation(isLocationRequested: boolean) {
+export function useGeolocation() {
   const [geolocation, setGeolocation] = useState<LocalizationType | null>(null);
   const [errorGeolocation, setErrorGeoLocation] = useState<string | null>(null);
   const [loadingGeolocation, setLoadingGeolocation] = useState(false);
 
-  useEffect(() => {
-    if (!isLocationRequested) return;
-
+  const refreshGeolocation = () => {
     if (!navigator.geolocation) {
       setErrorGeoLocation("Geolocalizzazione non supportata.");
       return;
@@ -23,6 +21,7 @@ export function useGeolocation(isLocationRequested: boolean) {
           longitude: position.coords.longitude,
         });
         setLoadingGeolocation(false);
+        setErrorGeoLocation(null);
       },
       (err) => {
         setErrorGeoLocation(err.message);
@@ -34,7 +33,12 @@ export function useGeolocation(isLocationRequested: boolean) {
         maximumAge: 0,
       }
     );
-  }, [isLocationRequested]);
+  };
 
-  return { geolocation, errorGeolocation, loadingGeolocation };
+  return {
+    geolocation,
+    errorGeolocation,
+    loadingGeolocation,
+    refreshGeolocation,
+  };
 }
