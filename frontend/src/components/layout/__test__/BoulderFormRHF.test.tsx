@@ -1,15 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import BoulderFormRHF from "../BoulderFormRHF";
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { useGeolocation } from "../../../customHooks/useLocalization";
 
 const queryClient = new QueryClient();
 const theme = createTheme();
@@ -226,6 +219,22 @@ describe("localizzati button", () => {
 
     expect(mockRefreshGeolocation).toHaveBeenCalledTimes(1);
   });
+  it("should update latitude input field when Localizzati button is clicked", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <BoulderFormRHF />
+        </ThemeProvider>
+      </QueryClientProvider>
+    );
+    const button = screen.getByRole("button", { name: /localizzati/i });
+    await user.click(button);
+
+    const latitudeInput = screen.getByTestId("latitude-input");
+    const latInput = latitudeInput.querySelector("input")!;
+  });
 });
 it("should calls mutation with correct data", async () => {
   render(
@@ -243,7 +252,7 @@ it("should calls mutation with correct data", async () => {
   const nameInput = screen.getByLabelText(/nome boulder/i);
   const descriptionInput = screen.getByLabelText("descrizione boulder");
   const select = screen.getByRole("combobox");
-  // selecting input field
+  // lat e lng input field
   const latInput = latitudeInput.querySelector("input")!;
   const lngInput = longitudeInput.querySelector("input")!;
   // name
