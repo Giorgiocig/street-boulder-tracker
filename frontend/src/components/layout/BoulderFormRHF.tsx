@@ -11,17 +11,10 @@ import { DIFFICULTY_SELECT_MENU_ITEMS, type IBoulder } from "../../utilities";
 import { useGeolocation } from "../../customHooks/useLocalization";
 import LeafletMapViewer from "../common/LeafletMapViewer";
 import { useEffect, useState } from "react";
-import { CustomNumberInput } from "../form/NumberInput";
 import { NumberInputRHF } from "../form/NumberInputRHF";
 export type BoulderSchemaValues = z.infer<typeof BoulderSchema>;
 
-type latlng = {
-  latitude: number;
-  longitude: number;
-};
-
 export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
-  const [latLng, setLatLng] = useState<latlng>({ latitude: 0, longitude: 0 });
   const [getLocalization, setGetLocalization] = useState(false);
   const createBoulderMutation = useAddBoulder();
   // form setup
@@ -40,6 +33,7 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
       description: "",
       difficulty: "facile",
       latitude: 0,
+      longitude: 0,
     },
   });
 
@@ -54,20 +48,8 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
     }, 0);
   };
 
-  console.log(geolocation);
-
-  useEffect(() => {
-    if (geolocation) {
-      setLatLng((prev) => ({
-        ...prev,
-        latitude: geolocation.latitude,
-        longitude: geolocation.longitude,
-      }));
-    }
-  }, [geolocation]);
-
   const onSubmit = (data: BoulderSchemaValues) => {
-    createBoulderMutation.mutate(data);
+    //createBoulderMutation.mutate(data);
     console.log(data);
   };
 
@@ -105,8 +87,14 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
         name={"latitude"}
         control={control}
         label={"latitudine"}
+        dataTestId={"latitude-input"}
       />
-      <TextField />
+      <NumberInputRHF
+        name={"longitude"}
+        control={control}
+        label={"longitudine"}
+        dataTestId={"longitude-input"}
+      />
       <Button
         sx={{
           mt: 4,
