@@ -1,5 +1,5 @@
-import type { Control, FieldError, FieldErrors } from "react-hook-form";
-import type { Difficulty, FieldType } from "../types";
+import type { Control, FieldErrors } from "react-hook-form";
+import type { Difficulty, TextFieldType } from "../types";
 
 export interface ISelectForm {
   name: string;
@@ -19,20 +19,11 @@ export interface IBoulder {
   longitude: number;
   createdAt: string;
   user?: any;
+  eventId: number;
 }
 
 export interface IFormFieldsContainerProps {
-  fields: FieldType[];
-}
-
-export interface IBoulderForm {
-  name: string;
-  description: string;
-  difficulty: Difficulty;
-  latitude: string;
-  longitude: string;
-  createdAt: string;
-  boulderImage: File | string;
+  fields: TextFieldType[];
 }
 
 export interface IEventForm {
@@ -48,7 +39,7 @@ export interface IEventForm {
 
 export interface ILeafletMapViewerProps {
   latLong: [number, number] | null;
-  setFormData: any;
+  setValue: (field: "latitude" | "longitude", value: number) => void;
   name: string;
 }
 
