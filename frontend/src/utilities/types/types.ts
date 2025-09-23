@@ -1,6 +1,4 @@
-import type { IBoulderForm } from "../interfaces";
-
-type TextFieldType = {
+export type TextFieldType = {
   id: string;
   label: string;
   name: string;
@@ -9,15 +7,6 @@ type TextFieldType = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   select?: false;
 };
-
-type SelectFieldType = {
-  select: true;
-  menuItems: string[];
-  setFormData: React.Dispatch<React.SetStateAction<IBoulderForm>>;
-  value: string;
-};
-
-export type FieldType = TextFieldType | SelectFieldType;
 
 export type LocalizationType = {
   latitude: number;
