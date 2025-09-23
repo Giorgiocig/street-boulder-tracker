@@ -2,8 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import BoulderFormRHF from "../BoulderFormRHF";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { createTheme, ThemeProvider } from "@mui/material";
 
 const queryClient = new QueryClient();
+const theme = createTheme();
 const mutateMock = vi.fn();
 
 vi.mock("../../../services", () => ({
@@ -21,7 +23,9 @@ describe("BoulderFormRHF", () => {
     it("should render name textField", () => {
       render(
         <QueryClientProvider client={queryClient}>
-          <BoulderFormRHF />
+          <ThemeProvider theme={theme}>
+            <BoulderFormRHF />
+          </ThemeProvider>
         </QueryClientProvider>
       );
       const nameTextField = screen.getByLabelText("nome boulder");
@@ -30,7 +34,9 @@ describe("BoulderFormRHF", () => {
     it("should render errorText whether textField is empty", async () => {
       render(
         <QueryClientProvider client={queryClient}>
-          <BoulderFormRHF />
+          <ThemeProvider theme={theme}>
+            <BoulderFormRHF />
+          </ThemeProvider>
         </QueryClientProvider>
       );
       const user = userEvent.setup();
@@ -48,7 +54,9 @@ describe("BoulderFormRHF", () => {
     it("should render description textField", () => {
       render(
         <QueryClientProvider client={queryClient}>
-          <BoulderFormRHF />
+          <ThemeProvider theme={theme}>
+            <BoulderFormRHF />
+          </ThemeProvider>
         </QueryClientProvider>
       );
       const descriprionTextField = screen.getByLabelText("descrizione boulder");
@@ -57,7 +65,9 @@ describe("BoulderFormRHF", () => {
     it("should render errorText whether textField is empty", async () => {
       render(
         <QueryClientProvider client={queryClient}>
-          <BoulderFormRHF />
+          <ThemeProvider theme={theme}>
+            <BoulderFormRHF />
+          </ThemeProvider>
         </QueryClientProvider>
       );
       const user = userEvent.setup();
@@ -75,7 +85,9 @@ describe("BoulderFormRHF", () => {
     it("should render difficulty select", () => {
       render(
         <QueryClientProvider client={queryClient}>
-          <BoulderFormRHF />
+          <ThemeProvider theme={theme}>
+            <BoulderFormRHF />
+          </ThemeProvider>
         </QueryClientProvider>
       );
 
@@ -85,7 +97,9 @@ describe("BoulderFormRHF", () => {
     it("should select a difficulty", async () => {
       render(
         <QueryClientProvider client={queryClient}>
-          <BoulderFormRHF />
+          <ThemeProvider theme={theme}>
+            <BoulderFormRHF />
+          </ThemeProvider>
         </QueryClientProvider>
       );
       //click on select
@@ -100,40 +114,76 @@ describe("BoulderFormRHF", () => {
       expect(select).toHaveTextContent("medio");
     });
   });
-  it("should calls mutation with correct data", async () => {
+  describe("latitude textField", () => {
+    it("should render latitude textfield", () => {
+      render(
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <BoulderFormRHF />
+          </ThemeProvider>
+        </QueryClientProvider>
+      );
+      const latitudeNumberInput = screen.getByTestId("latitude-input");
+      expect(latitudeNumberInput).toBeInTheDocument();
+    });
+  });
+  it("should render errorText whether latitude textField is empty", async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <BoulderFormRHF />
+        <ThemeProvider theme={theme}>
+          <BoulderFormRHF />
+        </ThemeProvider>
       </QueryClientProvider>
     );
-
-    // user interactions
     const user = userEvent.setup();
-    // input field
-    const nameInput = screen.getByLabelText(/nome boulder/i);
-    const descriptionInput = screen.getByLabelText("descrizione boulder");
-    const select = screen.getByRole("combobox");
-    // typing
-    await user.type(nameInput, "Boulder 1");
-    await user.type(descriptionInput, "Boulder description");
     const submitButton = screen.getByRole("button", {
       name: /inserisci boulder/i,
     });
-    // select
-    await user.click(select);
-    const listbox = await screen.findByRole("listbox");
-    const option = within(listbox).getByText("medio");
-
-    await user.click(option);
     await user.click(submitButton);
-
-    expect(mutateMock).toHaveBeenCalledTimes(1);
-    expect(mutateMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: "Boulder 1",
-        description: "Boulder description",
-        difficulty: "medio",
-      })
-    );
+    const errorMsg = await screen.findByText(/latitudine è obbligatoria./i);
+    expect(errorMsg).toBeInTheDocument();
   });
+});
+it("should calls mutation with correct data", async () => {
+  render(
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <BoulderFormRHF />
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+  const lat = 123123;
+  // user interactions
+  const user = userEvent.setup();
+  // input field
+  const nameInput = screen.getByLabelText(/nome boulder/i);
+  const descriptionInput = screen.getByLabelText("descrizione boulder");
+  const select = screen.getByRole("combobox");
+  const latitudeInput = screen.getByTestId("latitude-input");
+  // name
+  await user.type(nameInput, "Boulder 1");
+  // description
+  await user.type(descriptionInput, "Boulder description");
+  const submitButton = screen.getByRole("button", {
+    name: /inserisci boulder/i,
+  });
+  // latitude
+  await user.type(latitudeInput, lat.toString());
+  // select
+  await user.click(select);
+  const listbox = await screen.findByRole("listbox");
+  const option = within(listbox).getByText("medio");
+
+  await user.click(option);
+  await user.click(submitButton);
+
+  expect(mutateMock).toHaveBeenCalledTimes(1);
+  expect(mutateMock).toHaveBeenCalledWith(
+    expect.objectContaining({
+      name: "Boulder 1",
+      description: "Boulder description",
+      difficulty: "medio",
+      latitude: 123123,
+    })
+  );
 });
