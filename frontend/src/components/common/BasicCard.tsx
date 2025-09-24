@@ -9,9 +9,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDeleteBoulder } from "../../services";
 import { useState } from "react";
-import BoulderForm from "../layout/BoulderForm";
 import FullScreenDialog from "./FullScreenDialog";
 import AlertDialog from "./AlertDialog";
+import BoulderFormRHF from "../layout/BoulderFormRHF";
 
 export default function BasicCard({
   boulder,
@@ -101,9 +101,9 @@ export default function BasicCard({
         isOpen={isOpenFullScreenDialog}
         titleText="Boulder Editor - Modifica Boulder"
       >
-        <BoulderForm boulder={boulder} />
+        <BoulderFormRHF boulder={boulder} />
       </FullScreenDialog>
-      {isOpenFullScreenDialog && <BoulderForm boulder={boulder} />}
+      {isOpenFullScreenDialog && <BoulderFormRHF boulder={boulder} />}
       <AlertDialog
         open={isOpenAlertDialog}
         setOpen={setIsOpenAlertDialog}
