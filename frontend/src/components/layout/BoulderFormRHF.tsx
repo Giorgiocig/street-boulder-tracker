@@ -5,7 +5,7 @@ import { BoulderSchema } from "../../zodSchemas/BoulderSchema";
 import { Button, TextField, Typography } from "@mui/material";
 import PublishIcon from "@mui/icons-material/Publish";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
-import { useAddBoulder } from "../../services";
+import { useAddBoulder, useUpdateBoulder } from "../../services";
 import SelectForm from "../form/SelectForm";
 import {
   DIFFICULTY_SELECT_MENU_ITEMS,
@@ -14,20 +14,20 @@ import {
 } from "../../utilities";
 import { useGeolocation } from "../../customHooks/useLocalization";
 import LeafletMapViewer from "../common/LeafletMapViewer";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NumberInputRHF } from "../form/NumberInputRHF";
 import { useParams } from "react-router";
 export type BoulderSchemaValues = z.infer<typeof BoulderSchema>;
 
-export default function BoulderFormRHF({ boulder }: { boulder?: any }) {
+export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
   const { eventId } = useParams<{ eventId: string }>();
   const createBoulderMutation = useAddBoulder();
+  const updateBoulderMutation = useUpdateBoulder();
   // form setup
   const {
     register,
     handleSubmit,
     setValue,
-    getValues,
     reset,
     watch,
     control,
@@ -62,14 +62,36 @@ export default function BoulderFormRHF({ boulder }: { boulder?: any }) {
     }
   }, [geolocation]);
 
+  useEffect(() => {
+    if (boulder) {
+      const boulderData = {
+        name: boulder.name,
+        description: boulder.description,
+        difficulty: boulder.difficulty,
+        latitude: boulder.latitude,
+        longitude: boulder.longitude,
+      };
+      reset(boulderData);
+    }
+  }, [boulder]);
+  console.log(boulder);
   // submit
   const onSubmit = (data: BoulderSchemaValues) => {
-    createBoulderMutation.mutate({
-      ...data,
-      difficulty: data.difficulty as Difficulty,
-      eventId: parseFloat(eventId!),
-      createdAt: new Date().toISOString(),
-    });
+    if (boulder) {
+      const formattedData: IBoulder = {
+        ...data,
+        difficulty: data.difficulty as Difficulty,
+        eventId: parseFloat(eventId!),
+      };
+      updateBoulderMutation.mutate({ id: boulder.id!, data: formattedData });
+    } else {
+      createBoulderMutation.mutate({
+        ...data,
+        difficulty: data.difficulty as Difficulty,
+        eventId: parseFloat(eventId!),
+        createdAt: new Date().toISOString(),
+      });
+    }
   };
 
   return (
@@ -147,7 +169,7 @@ export default function BoulderFormRHF({ boulder }: { boulder?: any }) {
           },
         }}
       >
-        Inserisci Boulder
+        {boulder ? "Aggiorna Boulder" : "Inserisci Boulder"}
       </Button>
       {errorGeolocation && (
         <Typography>Impossibile ottenere la localizzazione</Typography>
