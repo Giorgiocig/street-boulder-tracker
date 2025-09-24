@@ -17,7 +17,7 @@ export interface IBoulder {
   difficulty: Difficulty;
   latitude: number;
   longitude: number;
-  createdAt: string;
+  createdAt?: string;
   user?: any;
   eventId: number;
 }
