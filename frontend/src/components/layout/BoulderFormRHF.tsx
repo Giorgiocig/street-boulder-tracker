@@ -17,10 +17,15 @@ import LeafletMapViewer from "../common/LeafletMapViewer";
 import { useEffect } from "react";
 import { NumberInputRHF } from "../form/NumberInputRHF";
 import { useParams } from "react-router";
+
+// Boulder schema - zod
 export type BoulderSchemaValues = z.infer<typeof BoulderSchema>;
 
 export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
+  // params
   const { eventId } = useParams<{ eventId: string }>();
+  // context
+  // mutation
   const createBoulderMutation = useAddBoulder();
   const updateBoulderMutation = useUpdateBoulder();
   // form setup
@@ -43,7 +48,7 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
     },
   });
 
-  // GEOLOCATION
+  // Geolocation
   const {
     geolocation,
     errorGeolocation,
@@ -74,7 +79,7 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
       reset(boulderData);
     }
   }, [boulder]);
-  console.log(boulder);
+
   // submit
   const onSubmit = (data: BoulderSchemaValues) => {
     if (boulder) {

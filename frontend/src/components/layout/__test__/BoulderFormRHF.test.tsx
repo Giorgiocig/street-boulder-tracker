@@ -337,7 +337,7 @@ describe("BoulderFormRHF", () => {
       name: /aggiorna boulder/i,
     });
 
-    // Puliamo i campi prima di digitare
+    // Clean field befor type
     await user.clear(nameInput);
     await user.type(nameInput, "Boulder 1");
 
@@ -350,13 +350,13 @@ describe("BoulderFormRHF", () => {
     await user.clear(longitudeInput);
     await user.type(longitudeInput, "123123");
 
-    // Cambiamo il select
+    // Change select
     await user.click(select);
     const listbox = await screen.findByRole("listbox");
     const option = within(listbox).getByText("medio");
     await user.click(option);
 
-    // Submit del form
+    // Form submit
     await user.click(submitButton);
 
     await waitFor(() => {
