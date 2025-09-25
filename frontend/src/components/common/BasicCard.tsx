@@ -12,6 +12,7 @@ import { useState } from "react";
 import FullScreenDialog from "./FullScreenDialog";
 import AlertDialog from "./AlertDialog";
 import BoulderFormRHF from "../layout/BoulderFormRHF";
+import { useBoulderId } from "../../customHooks/useBoulderId";
 
 export default function BasicCard({
   boulder,
@@ -20,6 +21,10 @@ export default function BasicCard({
   boulder: IBoulder;
   setLatLng: (arg: number[]) => void;
 }) {
+  // context
+  const { boulderIdCtx, setBoulderIdCtx } = useBoulderId();
+  setBoulderIdCtx(boulder.id!);
+
   const [isOpenFullScreenDialog, setIsOpenFullScreenDialog] = useState(false);
   const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false);
   const deleteBoulderMutation = useDeleteBoulder();
