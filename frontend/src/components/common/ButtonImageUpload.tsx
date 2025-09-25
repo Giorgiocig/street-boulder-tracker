@@ -1,6 +1,8 @@
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useBoulderId } from "../../customHooks/useBoulderId";
+import { useAddBoulderImage } from "../../services/BoulderImage";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -14,11 +16,19 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function ButtonImageUpload({
-  handleChange,
-}: {
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
+export default function ButtonImageUpload() {
+  const { boulderIdCtx, setBoulderIdCtx } = useBoulderId();
+  const uploadImageMutation = useAddBoulderImage();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || boulderIdCtx === null) return;
+    uploadImageMutation.mutate({
+      data: file,
+      boulderId: boulderIdCtx,
+    });
+  };
+
   return (
     <Button
       component="label"
@@ -28,7 +38,7 @@ export default function ButtonImageUpload({
       startIcon={<CloudUploadIcon />}
     >
       Upload Immagine
-      <VisuallyHiddenInput type="file" onChange={() => handleChange} />
+      <VisuallyHiddenInput type="file" onChange={handleChange} />
     </Button>
   );
 }
