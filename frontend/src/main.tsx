@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SnackbarProvider } from "./contexts/SnackbarContext.tsx";
 import { LatLongProvider } from "./contexts/LatLongContext.tsx";
+import { BoulderIdProvider } from "./contexts/BoulderIdContext.tsx";
 
 const queryClient = new QueryClient();
 
@@ -13,7 +14,9 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <SnackbarProvider>
         <LatLongProvider>
-          <App />
+          <BoulderIdProvider>
+            <App />
+          </BoulderIdProvider>
         </LatLongProvider>
       </SnackbarProvider>
     </QueryClientProvider>
