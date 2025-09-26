@@ -24,7 +24,6 @@ export type BoulderSchemaValues = z.infer<typeof BoulderSchema>;
 export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
   // params
   const { eventId } = useParams<{ eventId: string }>();
-  // context
   // mutation
   const createBoulderMutation = useAddBoulder();
   const updateBoulderMutation = useUpdateBoulder();
