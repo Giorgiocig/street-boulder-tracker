@@ -3,22 +3,17 @@ import { useBoulderId } from "../../customHooks/useBoulderId";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-type Props = {};
-
-export default function ImageDisplayerStep({}: Props) {
+export default function ImageDisplayerStep() {
   const { boulderIdCtx } = useBoulderId();
   const getBoulderImage = useGetBoulderImages(Number(boulderIdCtx));
-  const res = getBoulderImage.data;
-  if (!res) return;
+  const boulderImgsData = getBoulderImage.data;
+  console.log(boulderImgsData);
+  if (!boulderImgsData) return;
   return (
-    <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-      {res.map((item) => (
+    <ImageList sx={{ width: "100%", height: 500 }} cols={8} rowHeight={250}>
+      {boulderImgsData.map((item) => (
         <ImageListItem key={item.url}>
-          <img
-            srcSet={`${item.url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            src={`${item.url}?w=164&h=164&fit=crop&auto=format`}
-            loading="lazy"
-          />
+          <img srcSet={`${item.url}`} src={`${item.url}`} loading="lazy" />
         </ImageListItem>
       ))}
     </ImageList>
