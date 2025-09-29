@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { BoulderSchema } from "../../zodSchemas/BoulderSchema";
-import { Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import PublishIcon from "@mui/icons-material/Publish";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { useAddBoulder, useUpdateBoulder } from "../../services";
@@ -128,18 +128,20 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
         menuItems={DIFFICULTY_SELECT_MENU_ITEMS}
       />
       {/** Latitudine e longitudine in numbers */}
-      <NumberInputRHF
-        name={"latitude"}
-        control={control}
-        label={"latitudine"}
-        dataTestId={"latitude-input"}
-      />
-      <NumberInputRHF
-        name={"longitude"}
-        control={control}
-        label={"longitudine"}
-        dataTestId={"longitude-input"}
-      />
+      <Box sx={{ display: "flex", gap: 2, paddingTop: 1 }}>
+        <NumberInputRHF
+          name={"latitude"}
+          control={control}
+          label={"latitudine"}
+          dataTestId={"latitude-input"}
+        />
+        <NumberInputRHF
+          name={"longitude"}
+          control={control}
+          label={"longitudine"}
+          dataTestId={"longitude-input"}
+        />
+      </Box>
       <Button
         sx={{
           mt: 4,
@@ -161,20 +163,22 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
         setValue={setValue}
         name={watch("name")}
       />
-      <Button
-        variant="contained"
-        endIcon={<PublishIcon />}
-        type="submit"
-        size="large"
-        sx={{
-          p: {
-            xs: "2rem 2rem 2rem 2rem",
-            md: "1rem 1rem 1rem 1rem",
-          },
-        }}
-      >
-        {boulder ? "Aggiorna Boulder" : "Inserisci Boulder"}
-      </Button>
+      <Box sx={{ display: "flex", justifyContent: "center", paddingTop: 2 }}>
+        <Button
+          variant="contained"
+          endIcon={<PublishIcon />}
+          type="submit"
+          size="large"
+          sx={{
+            p: {
+              xs: "2rem 2rem 2rem 2rem",
+              md: "1rem 1rem 1rem 1rem",
+            },
+          }}
+        >
+          {boulder ? "Aggiorna Boulder" : "Inserisci Boulder"}
+        </Button>
+      </Box>
       {errorGeolocation && (
         <Typography>Impossibile ottenere la localizzazione</Typography>
       )}
