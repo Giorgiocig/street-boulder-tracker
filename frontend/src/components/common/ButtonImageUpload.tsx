@@ -36,6 +36,12 @@ export default function ButtonImageUpload() {
       variant="contained"
       tabIndex={-1}
       startIcon={<CloudUploadIcon />}
+      sx={{
+        p: {
+          xs: "2rem 2rem 2rem 2rem",
+          md: "1rem 1rem 1rem 1rem",
+        },
+      }}
     >
       Upload Immagine
       <VisuallyHiddenInput type="file" onChange={handleChange} />
