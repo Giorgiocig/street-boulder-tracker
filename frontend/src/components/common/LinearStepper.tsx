@@ -108,7 +108,7 @@ export default function LinearStepper() {
                 Skip
               </Button>
             )}
-            <Button onClick={handleNext}>
+            <Button onClick={handleNext} variant="contained">
               {activeStep === steps.length - 1 ? "Finish" : "Next"}
             </Button>
           </Box>
