@@ -68,4 +68,10 @@ export class BoulderController {
   ) {
     return this.cloudinaryService.getImages(boulderId);
   }
+
+  @Delete('image/:publicId')
+  async deleteImage(@Param('publicId') publicId: string) {
+    const decodedPublicId = decodeURIComponent(publicId);
+    return this.cloudinaryService.deleteImage(decodedPublicId);
+  }
 }
