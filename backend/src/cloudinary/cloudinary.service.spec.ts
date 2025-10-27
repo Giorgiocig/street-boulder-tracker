@@ -22,6 +22,8 @@ describe('CloudinaryService', () => {
     image: {
       create: jest.fn(),
       findMany: jest.fn(),
+      findUnique: jest.fn(),
+      delete: jest.fn(),
     },
   };
 
@@ -180,6 +182,23 @@ describe('CloudinaryService', () => {
       await expect(service.getImages(999)).rejects.toThrowError(
         NotFoundException,
       );
+    });
+  });
+  describe('deleteImage', () => {
+    it('should delete one image successfully', async () => {
+      const mockImage = imageResultFixture;
+      mockPrismaService.image.findUnique.mockResolvedValue(mockImage);
+      const destroySpy = jest
+        .spyOn(cloudinary.uploader, 'destroy')
+        .mockResolvedValue({ result: 'ok' } as any);
+      mockPrismaService.image.delete.mockResolvedValue(mockImage);
+      expect(mockPrismaService.image.findUnique).toHaveBeenCalledWith({
+        where: { public_id: mockImage.public_id },
+      });
+      expect(destroySpy).toHaveBeenCalledWith(mockImage.public_id);
+      expect(mockPrismaService.image.delete).toHaveBeenCalledWith({
+        where: { public_id: mockImage.public_id },
+      });
     });
   });
 });
