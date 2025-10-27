@@ -78,4 +78,24 @@ export class CloudinaryService {
       );
     }
   }
+  async deleteImage(publicId: string) {
+    try {
+      const image = await this.prisma.image.findUnique({
+        where: { public_id: publicId },
+      });
+      if (!image) {
+        throw new NotFoundException(`Image with id ${publicId} not found`);
+      }
+      // remove image from Cloudinary
+      await cloudinary.uploader.destroy(publicId);
+      // remove id from db
+      return await this.prisma.image.delete({ where: { public_id: publicId } });
+    } catch (error) {
+      console.error(error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to update image', error);
+    }
+  }
 }
