@@ -2,40 +2,54 @@ import { createTheme } from "@mui/material/styles";
 
 export const theme = createTheme({
   palette: {
-    mode: "dark", // layout
+    mode: "dark",
     background: {
-      default: "#F8F9FA", // main bg
-      paper: "#FFFFFF	", // card / content bg
+      default: "#F8F9FA",
+      paper: "#FFFFFF",
     },
     primary: {
-      main: "#2E8B57", // light green – main btn / completed actions
+      main: "#2E8B57",
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#708090", // soft green – secondary btn
+      main: "#708090",
       contrastText: "#212134",
     },
     text: {
-      primary: "#212529", // main text
-      secondary: "#6C757D", // secondary text
+      primary: "#212529",
+      secondary: "#6C757D",
     },
     warning: {
-      main: "#FFD700", // alert
+      main: "#FFD700",
     },
-    divider: "#DEE2E6	",
+    divider: "#DEE2E6",
+    action: {
+      disabled: "#A9A9A9",
+      disabledBackground: "#E0E0E0",
+    },
   },
   components: {
     MuiOutlinedInput: {
       styleOverrides: {
         notchedOutline: {
-          borderColor: "#CED4DA", // colore del contorno
+          borderColor: "#CED4DA",
         },
         root: {
           "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#2E8B57", // al passaggio del mouse
+            borderColor: "#2E8B57",
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#2E8B57", // quando è attivo
+            borderColor: "#2E8B57",
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          "&.Mui-disabled": {
+            color: "#6C757D",
+            backgroundColor: "#E0E0E0",
           },
         },
       },
