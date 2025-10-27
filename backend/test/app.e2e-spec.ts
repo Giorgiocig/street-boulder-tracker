@@ -319,5 +319,42 @@ describe('App e2e', () => {
           .expectJsonLength('', 1);
       });
     });
+    describe('getImages', () => {
+      it('should delete one image', async () => {
+        const uniqueName = `event-${Date.now()}`;
+        const eventId = await pactum
+          .spec()
+          .post('http://localhost:3000/v1/events/add')
+          .withBody({ ...eventBodyRequestFixture, name: uniqueName })
+          .expectStatus(201)
+          .returns('id');
+
+        const response = await pactum
+          .spec()
+          .post('http://localhost:3000/v1/boulders/add')
+          .withBody({
+            ...boulderDtoFixture,
+            eventId,
+          })
+          .expectStatus(201);
+
+        const boulderId = response.body.id;
+
+        const uploadImageResponse = await pactum
+          .spec()
+          .post(`http://localhost:3000/v1/boulders/${boulderId}/image`)
+          .withFile(
+            'file',
+            'D:/coding on disk D/street-boulder-tracker/backend/src/cloudinary/test.utilities/testimage.jpeg',
+          );
+        const publicId = uploadImageResponse.body.public_id;
+        const encodedPublicId = encodeURIComponent(publicId);
+
+        await pactum
+          .spec()
+          .delete(`http://localhost:3000/v1/boulders/image/${encodedPublicId}`)
+          .expectStatus(200);
+      });
+    });
   });
 });
