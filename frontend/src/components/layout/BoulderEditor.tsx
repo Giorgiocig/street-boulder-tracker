@@ -3,7 +3,6 @@ import BouldersViewer from "./BouldersViewer";
 import FullScreenDialog from "../common/FullScreenDialog";
 import { useToggle } from "../../customHooks/useToggle";
 import PositionedSnackbar from "../common/Snackbar";
-import BoulderFormRHF from "./BoulderFormRHF";
 import LinearStepper from "../common/LinearStepper";
 
 export default function BoulderEditor() {
