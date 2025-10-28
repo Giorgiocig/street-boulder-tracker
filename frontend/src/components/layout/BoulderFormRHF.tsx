@@ -21,7 +21,13 @@ import { useParams } from "react-router";
 // Boulder schema - zod
 export type BoulderSchemaValues = z.infer<typeof BoulderSchema>;
 
-export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
+export default function BoulderFormRHF({
+  boulder,
+  setIsSubmitted,
+}: {
+  boulder?: IBoulder;
+  setIsSubmitted: (arg: boolean) => void;
+}) {
   // params
   const { eventId } = useParams<{ eventId: string }>();
   // mutation
@@ -95,6 +101,7 @@ export default function BoulderFormRHF({ boulder }: { boulder?: IBoulder }) {
         eventId: parseFloat(eventId!),
         createdAt: new Date().toISOString(),
       });
+      setIsSubmitted(false);
     }
   };
 
