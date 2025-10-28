@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addBoulderImage } from "../boulderImageApi";
+import { addBoulderImage, deleteBoulderImage } from "../boulderImageApi";
 
 export const useAddBoulderImage = () => {
   const queryClient = useQueryClient();
@@ -10,7 +10,27 @@ export const useAddBoulderImage = () => {
       console.log("Upload corretto dell'immagine");
     },
     onError: () => {
-      console.log("Upload corretto dell'immagine");
+      console.log("Errore durante l'upload");
+    },
+    onSettled: async (_, error) => {
+      if (error) console.log(error);
+      else
+        await queryClient.invalidateQueries({
+          queryKey: ["boulders"],
+        });
+    },
+  });
+};
+
+export const useDeleteBoulderImage = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (publicId: string) => deleteBoulderImage(publicId),
+    onSuccess: () => {
+      console.log("Immagine eliminata correttamente");
+    },
+    onError: () => {
+      console.log("Errore durnte l'eliminazione dell'immagine");
     },
     onSettled: async (_, error) => {
       if (error) console.log(error);
