@@ -13,6 +13,7 @@ const steps = ["Crea il boulder", "Fai l'upload di foto", "Salva il boulder"];
 export default function LinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
+  const [isSubmitted, setIsSubmitted] = React.useState<boolean>(true);
 
   const isStepOptional = (step: number) => {
     return step === 1;
@@ -23,6 +24,7 @@ export default function LinearStepper() {
   };
 
   const handleNext = () => {
+    setIsSubmitted(false);
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -91,7 +93,9 @@ export default function LinearStepper() {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          {activeStep === 0 && <BoulderFormRHF />}
+          {activeStep === 0 && (
+            <BoulderFormRHF setIsSubmitted={setIsSubmitted} />
+          )}
           {activeStep === 1 && <UploadImageStep />}
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button
@@ -108,7 +112,11 @@ export default function LinearStepper() {
                 Skip
               </Button>
             )}
-            <Button onClick={handleNext} variant="contained">
+            <Button
+              onClick={handleNext}
+              variant="contained"
+              disabled={isSubmitted}
+            >
               {activeStep === steps.length - 1 ? "Finish" : "Next"}
             </Button>
           </Box>
