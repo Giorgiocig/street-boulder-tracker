@@ -5,6 +5,7 @@ import ImageListItem from "@mui/material/ImageListItem";
 import { Box, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDeleteBoulderImage } from "../../services/BoulderImage";
+import PositionedSnackbar from "./Snackbar";
 
 export default function ImageDisplayerStep() {
   const { boulderIdCtx } = useBoulderId();
@@ -20,25 +21,29 @@ export default function ImageDisplayerStep() {
 
   if (!boulderImgsData) return;
   return (
-    <ImageList sx={{ width: "100%", height: 500 }} cols={8} rowHeight={250}>
-      {boulderImgsData.map((item) => (
-        <ImageListItem key={item.url}>
-          <img srcSet={`${item.url}`} src={`${item.url}`} loading="lazy" />
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <IconButton
-              size="large"
-              onClick={() => handleClickDelete(item.public_id)}
+    <>
+      <ImageList sx={{ width: "100%", height: 500 }} cols={8} rowHeight={250}>
+        {boulderImgsData.map((item) => (
+          <ImageListItem key={item.url}>
+            <img srcSet={`${item.url}`} src={`${item.url}`} loading="lazy" />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              <DeleteIcon fontSize="inherit" />
-            </IconButton>
-          </Box>
-        </ImageListItem>
-      ))}
-    </ImageList>
+              <IconButton
+                size="large"
+                aria-label="delete btn"
+                onClick={() => handleClickDelete(item.public_id)}
+              >
+                <DeleteIcon fontSize="inherit" />
+              </IconButton>
+            </Box>
+          </ImageListItem>
+        ))}
+      </ImageList>
+      <PositionedSnackbar />
+    </>
   );
 }
