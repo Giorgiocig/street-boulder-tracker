@@ -30,3 +30,12 @@ export const getBoulderImages = async (
   const data = await res.json();
   return data;
 };
+
+// DELETE
+export const deleteBoulderImage = async (publicId: string) => {
+  const res = await fetch(
+    `http://localhost:3000/v1/boulders/image/${publicId}`,
+    { method: "DELETE" }
+  );
+  return await res.json();
+};
