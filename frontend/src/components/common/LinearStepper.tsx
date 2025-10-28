@@ -103,12 +103,18 @@ export default function LinearStepper() {
               disabled={activeStep === 0}
               onClick={handleBack}
               sx={{ mr: 1 }}
+              size="large"
             >
               Back
             </Button>
             <Box sx={{ flex: "1 1 auto" }} />
             {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+              <Button
+                color="inherit"
+                onClick={handleSkip}
+                sx={{ mr: 1 }}
+                size="large"
+              >
                 Skip
               </Button>
             )}
@@ -116,6 +122,7 @@ export default function LinearStepper() {
               onClick={handleNext}
               variant="contained"
               disabled={isSubmitted}
+              size="large"
             >
               {activeStep === steps.length - 1 ? "Finish" : "Next"}
             </Button>
