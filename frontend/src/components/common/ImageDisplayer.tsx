@@ -8,13 +8,17 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useGetBoulderImages } from "../../services/BoulderImage/queries/queries";
 import { useDeleteBoulderImage } from "../../services/BoulderImage";
+import { useBoulderId } from "../../customHooks/useBoulderId";
 
 export default function ImageDisplayer({
   boulderId,
 }: {
-  boulderId: number | undefined;
+  boulderId?: number | undefined;
 }) {
-  const getBoulderImage = useGetBoulderImages(Number(boulderId));
+  const { boulderIdCtx } = useBoulderId();
+  const getBoulderImage = useGetBoulderImages(
+    !boulderId ? Number(boulderIdCtx) : Number(boulderId)
+  );
   const boulderImgsData = getBoulderImage.data;
   const deleteBoulderImage = useDeleteBoulderImage();
 
