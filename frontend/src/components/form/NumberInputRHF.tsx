@@ -16,14 +16,16 @@ const LabelWrapper = styled("label")<{ focused?: boolean; error?: boolean }>(
     backgroundColor: theme.palette.background.paper,
     padding: "0 4px",
     fontSize: "0.75rem",
+    fontWeight: 500,
     color: error
       ? theme.palette.error.main
       : focused
       ? theme.palette.primary.main
-      : theme.palette.text.secondary, // Grigio come Material-UI
+      : theme.palette.text.secondary,
     pointerEvents: "none",
-
     zIndex: 1,
+    transition: "color 0.2s ease",
+    letterSpacing: "0.01em",
   })
 );
 
@@ -36,11 +38,12 @@ const StyledNumberInput = styled(BaseNumberInput)<{ error?: boolean }>(
   ({ theme, error }) => ({
     color: theme.palette.text.primary,
     background: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: 8,
     border: `1px solid ${
       error ? theme.palette.error.main : theme.palette.divider
     }`,
     width: "100%",
+    transition: "all 0.3s ease",
 
     "&:hover": {
       borderColor: error
@@ -60,9 +63,10 @@ const StyledNumberInput = styled(BaseNumberInput)<{ error?: boolean }>(
     },
 
     "&.Mui-disabled": {
-      backgroundColor: theme.palette.action.disabled,
+      backgroundColor: theme.palette.action.disabledBackground,
       borderColor: theme.palette.action.disabled,
       color: theme.palette.text.disabled,
+      cursor: "not-allowed",
     },
 
     [`& .${numberInputClasses.incrementButton}, & .${numberInputClasses.decrementButton}`]:
@@ -76,18 +80,20 @@ const StyledNumberInput = styled(BaseNumberInput)<{ error?: boolean }>(
       outline: "none",
       background: "transparent",
       font: "inherit",
-      padding: "16.5px 14px", // Padding standard Material-UI
+      padding: "16.5px 14px",
       boxSizing: "border-box",
       color: "inherit",
+      transition: "color 0.2s ease",
 
       "&::placeholder": {
         color: theme.palette.text.disabled,
-        opacity: 1,
+        opacity: 0.7,
       },
 
       "&:disabled": {
         color: theme.palette.text.disabled,
-        cursor: "default",
+        cursor: "not-allowed",
+        WebkitTextFillColor: theme.palette.text.disabled,
       },
     },
   })
