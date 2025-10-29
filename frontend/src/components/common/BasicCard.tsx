@@ -94,7 +94,7 @@ export default function BasicCard({
           >
             <EditIcon />
           </IconButton>
-          <IconButton aria-label="edit" onClick={setToggle} color="secondary">
+          <IconButton aria-label="image" onClick={setToggle} color="secondary">
             <ImageIcon />
           </IconButton>
         </Stack>
@@ -127,7 +127,7 @@ export default function BasicCard({
       <ResponsiveDialog
         setIsOpen={setToggle}
         isOpen={value}
-        titleText="Imamgini caricate"
+        titleText="Immagini caricate"
       >
         <ImageDisplayer boulderId={boulder.id} />
       </ResponsiveDialog>
