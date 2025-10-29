@@ -3,6 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import BasicCard from "../BasicCard";
 import { boulderFixture } from "./fixtures";
+import { BoulderIdProvider, SnackbarProvider } from "../../../contexts";
+import { ThemeProvider } from "@emotion/react";
+import { theme } from "../../../theme";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +30,9 @@ describe("BasicCard", () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <BasicCard boulder={boulderFixture} setLatLng={mockSetLatLng} />
+        <BoulderIdProvider>
+          <BasicCard boulder={boulderFixture} setLatLng={mockSetLatLng} />
+        </BoulderIdProvider>
       </QueryClientProvider>
     );
 
@@ -38,7 +43,9 @@ describe("BasicCard", () => {
     const user = userEvent.setup();
     render(
       <QueryClientProvider client={queryClient}>
-        <BasicCard boulder={boulderFixture} setLatLng={vi.fn()} />
+        <BoulderIdProvider>
+          <BasicCard boulder={boulderFixture} setLatLng={vi.fn()} />
+        </BoulderIdProvider>
       </QueryClientProvider>
     );
 
@@ -55,7 +62,9 @@ describe("BasicCard", () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <BasicCard boulder={boulderFixture} setLatLng={vi.fn()} />
+        <BoulderIdProvider>
+          <BasicCard boulder={boulderFixture} setLatLng={vi.fn()} />
+        </BoulderIdProvider>
       </QueryClientProvider>
     );
 
@@ -74,7 +83,11 @@ describe("BasicCard", () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <BasicCard boulder={boulderFixture} setLatLng={mockSetLatLng} />
+        <ThemeProvider theme={theme}>
+          <BoulderIdProvider>
+            <BasicCard boulder={boulderFixture} setLatLng={mockSetLatLng} />
+          </BoulderIdProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     );
 
@@ -90,7 +103,9 @@ describe("BasicCard", () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <BasicCard boulder={boulderFixture} setLatLng={mockSetLatLng} />
+        <BoulderIdProvider>
+          <BasicCard boulder={boulderFixture} setLatLng={mockSetLatLng} />
+        </BoulderIdProvider>
       </QueryClientProvider>
     );
     const localizzaBtn = screen.getByText("Localizza il boulder");
@@ -99,5 +114,26 @@ describe("BasicCard", () => {
       boulderFixture.latitude,
       boulderFixture.longitude,
     ]);
+  });
+  it("should open ImageDisplayerDialog when btn image is clicked", async () => {
+    const mockSetLatLng = vi.fn();
+    const user = userEvent.setup();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider>
+            <BoulderIdProvider>
+              <BasicCard boulder={boulderFixture} setLatLng={mockSetLatLng} />
+            </BoulderIdProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    );
+
+    const openImageDisplayerBtn = screen.getByRole("button", { name: "image" });
+    await user.click(openImageDisplayerBtn);
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveTextContent(/immagini caricate/i);
   });
 });
