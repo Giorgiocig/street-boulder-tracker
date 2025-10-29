@@ -1,5 +1,5 @@
 import ButtonImageUpload from "../common/ButtonImageUpload";
-import ImageDisplayerStep from "../common/ImageDisplayerStep";
+import ImageDisplayer from "../common/ImageDisplayer";
 import { Box } from "@mui/material";
 
 export default function UploadImageStep() {
@@ -7,7 +7,7 @@ export default function UploadImageStep() {
     <>
       <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <Box>
-          <ImageDisplayerStep />
+          <ImageDisplayer />
         </Box>
         <Box>
           <ButtonImageUpload />
