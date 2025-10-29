@@ -16,6 +16,7 @@ import { useBoulderId } from "../../customHooks/useBoulderId";
 import ImageIcon from "@mui/icons-material/Image";
 import { useToggle } from "../../customHooks/useToggle";
 import ImageDisplayer from "./ImageDisplayer";
+import ResponsiveDialog from "./ResponsiveDialog";
 
 export default function BasicCard({
   boulder,
@@ -123,13 +124,13 @@ export default function BasicCard({
         entityName={boulder.name}
         entityTitle="boulder"
       />
-      <FullScreenDialog
+      <ResponsiveDialog
         setIsOpen={setToggle}
         isOpen={value}
-        titleText="Event Editor - Modifica Evento"
+        titleText="Imamgini caricate"
       >
         <ImageDisplayer boulderId={boulder.id} />
-      </FullScreenDialog>
+      </ResponsiveDialog>
     </Card>
   );
 }
