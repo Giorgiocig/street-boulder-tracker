@@ -2,7 +2,7 @@ import { useGetBoulderImages } from "../../services/BoulderImage/queries/queries
 import { useBoulderId } from "../../customHooks/useBoulderId";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-import { Box, IconButton } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDeleteBoulderImage } from "../../services/BoulderImage";
 import PositionedSnackbar from "./Snackbar";
@@ -32,13 +32,15 @@ export default function ImageDisplayerStep() {
                 justifyContent: "center",
               }}
             >
-              <IconButton
+              <Button
+                variant="outlined"
                 size="large"
                 aria-label="delete btn"
+                startIcon={<DeleteIcon />}
                 onClick={() => handleClickDelete(item.public_id)}
               >
-                <DeleteIcon fontSize="inherit" />
-              </IconButton>
+                Sopprimi
+              </Button>
             </Box>
           </ImageListItem>
         ))}
