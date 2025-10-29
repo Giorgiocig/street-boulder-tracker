@@ -1,11 +1,10 @@
 import { cleanup, logRoles, render, screen } from "@testing-library/react";
 import { describe, it, vi, expect } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ImageDisplayerStep from "../ImageDisplayerStep";
 import testImg from "./testImg/testimage.jpeg";
 import { BoulderIdProvider } from "../../../contexts";
 import { userEvent, type UserEvent } from "@testing-library/user-event";
-import { useDeleteBoulderImage } from "../../../services/BoulderImage";
+import ImageDisplayer from "../ImageDisplayer";
 
 const queryClient = new QueryClient();
 const mockMutate = vi.fn();
@@ -32,14 +31,14 @@ vi.mock("../../../services/BoulderImage/mutations/mutations", () => ({
   })),
 }));
 
-describe("ImageDisplayerStep", () => {
+describe("ImageDisplayer", () => {
   let user: UserEvent;
   beforeEach(() => {
     user = userEvent.setup();
     const { container } = render(
       <QueryClientProvider client={queryClient}>
         <BoulderIdProvider>
-          <ImageDisplayerStep />
+          <ImageDisplayer />
         </BoulderIdProvider>
       </QueryClientProvider>
     );
