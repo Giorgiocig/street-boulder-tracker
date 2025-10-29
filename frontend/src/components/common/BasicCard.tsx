@@ -13,6 +13,9 @@ import FullScreenDialog from "./FullScreenDialog";
 import AlertDialog from "./AlertDialog";
 import BoulderFormRHF from "../layout/BoulderFormRHF";
 import { useBoulderId } from "../../customHooks/useBoulderId";
+import ImageIcon from "@mui/icons-material/Image";
+import { useToggle } from "../../customHooks/useToggle";
+import ImageDisplayer from "./ImageDisplayer";
 
 export default function BasicCard({
   boulder,
@@ -28,6 +31,7 @@ export default function BasicCard({
   const [isOpenFullScreenDialog, setIsOpenFullScreenDialog] = useState(false);
   const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false);
   const deleteBoulderMutation = useDeleteBoulder();
+  const [value, setToggle] = useToggle(false);
 
   const handleClickLocation = () => {
     setLatLng([boulder.latitude, boulder.longitude]);
@@ -89,6 +93,9 @@ export default function BasicCard({
           >
             <EditIcon />
           </IconButton>
+          <IconButton aria-label="edit" onClick={setToggle} color="secondary">
+            <ImageIcon />
+          </IconButton>
         </Stack>
       </Box>
       <CardActions>
@@ -116,6 +123,13 @@ export default function BasicCard({
         entityName={boulder.name}
         entityTitle="boulder"
       />
+      <FullScreenDialog
+        setIsOpen={setToggle}
+        isOpen={value}
+        titleText="Event Editor - Modifica Evento"
+      >
+        <ImageDisplayer boulderId={boulder.id} />
+      </FullScreenDialog>
     </Card>
   );
 }
