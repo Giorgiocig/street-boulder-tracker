@@ -8,7 +8,7 @@ import MyLocationIcon from "@mui/icons-material/MyLocation";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDeleteBoulder } from "../../services";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FullScreenDialog from "./FullScreenDialog";
 import AlertDialog from "./AlertDialog";
 import BoulderFormRHF from "../layout/BoulderFormRHF";
@@ -27,7 +27,10 @@ export default function BasicCard({
 }) {
   // context
   const { boulderIdCtx, setBoulderIdCtx } = useBoulderId();
-  setBoulderIdCtx(boulder.id!);
+
+  useEffect(() => {
+    setBoulderIdCtx(boulder.id!);
+  }, [boulder.id]);
 
   const [isOpenFullScreenDialog, setIsOpenFullScreenDialog] = useState(false);
   const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false);
