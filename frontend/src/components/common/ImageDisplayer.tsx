@@ -31,7 +31,8 @@ export default function ImageDisplayer({
   if (!boulderImgsData || boulderImgsData.length === 0) {
     return (
       <Typography color="text.secondary" align="center">
-        Nessuna immagine disponibile
+        Nessuna immagine disponibile, Clicca su Upload immagine epr caricare un
+        immagine
       </Typography>
     );
   }

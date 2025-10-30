@@ -84,11 +84,12 @@ export default function LinearStepper() {
       {activeStep === steps.length ? (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
+            Tutti gli step sono completati, clicca sul pulsante chiudi in alto
+            per chiudere
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
+            {/* <Button onClick={handleReset}>Reset</Button> */}
           </Box>
         </React.Fragment>
       ) : (
@@ -124,7 +125,7 @@ export default function LinearStepper() {
               disabled={isSubmitted}
               size="large"
             >
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+              {activeStep === steps.length - 1 ? "Termina" : "Prossimo Step"}
             </Button>
           </Box>
         </React.Fragment>
