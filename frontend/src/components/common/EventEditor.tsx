@@ -4,12 +4,14 @@ import EventForm from "../layout/EventForm";
 import { useToggle } from "../../customHooks/useToggle";
 import EventCardViewer from "./EventCardViewer";
 import PositionedSnackbar from "./Snackbar";
+import BasicBreadcrumbs from "./BasicBreadcrumbs";
 
 export default function EventEditor() {
   const [value, setToggle] = useToggle(false);
 
   return (
     <Box sx={{ "max-width": "1280px", margin: " 0 auto", minHeight: "84.3vh" }}>
+      <BasicBreadcrumbs />
       <Button
         variant="contained"
         size="large"
