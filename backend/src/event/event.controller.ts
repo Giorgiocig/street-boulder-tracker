@@ -12,11 +12,6 @@ import {
 import { EventService } from './event.service';
 import { EventDto } from './dto';
 import { UpdateEventDto } from './dto/updateEvent.dto';
-import { Boulder } from '@prisma/client';
-
-type EventWithBoulders = Event & {
-  boulders: Boulder[];
-};
 
 @Controller('v1/events')
 export class EventController {
